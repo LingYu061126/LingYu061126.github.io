@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>概率统计知识点整理（1） 常见概率分布 | Valproate</title><meta name="author" content="尺衡旦日"><meta name="copyright" content="尺衡旦日"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文总结了常见的离散与连续性概率分布，介绍了他们的分布记号、概率分布（或密度函数）、期望及方差与可能有的特殊性质，可用作概率统计课程复习或工程使用的快速查阅。    分布（及记号） 概率分布 期望\方差 特殊性质    几何分布  $X \sim G(p)$ $P(X&#x3D;k)&#x3D;q^{k-1}p$   $(q&#x3D;1-p)$ $E(X)&#x3D;\frac{1}{p}$">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率统计知识点整理（1） 常见概率分布">
+<meta property="og:url" content="https://lingyu061126.github.io/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/index.html">
+<meta property="og:site_name" content="Valproate">
+<meta property="og:description" content="本文总结了常见的离散与连续性概率分布，介绍了他们的分布记号、概率分布（或密度函数）、期望及方差与可能有的特殊性质，可用作概率统计课程复习或工程使用的快速查阅。    分布（及记号） 概率分布 期望\方差 特殊性质    几何分布  $X \sim G(p)$ $P(X&#x3D;k)&#x3D;q^{k-1}p$   $(q&#x3D;1-p)$ $E(X)&#x3D;\frac{1}{p}$">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lingyu061126.github.io/images/Image_165853659272824.jpg">
+<meta property="article:published_time" content="2026-02-12T04:57:18.957Z">
+<meta property="article:modified_time" content="2026-02-12T05:00:47.453Z">
+<meta property="article:author" content="尺衡旦日">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lingyu061126.github.io/images/Image_165853659272824.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "概率统计知识点整理（1） 常见概率分布",
+  "url": "https://lingyu061126.github.io/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/",
+  "image": "https://lingyu061126.github.io/images/Image_165853659272824.jpg",
+  "datePublished": "2026-02-12T04:57:18.957Z",
+  "dateModified": "2026-02-12T05:00:47.453Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "尺衡旦日",
+      "url": "https://LingYu061126.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/Image_165853659272824.jpg"><link rel="canonical" href="https://lingyu061126.github.io/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '概率统计知识点整理（1） 常见概率分布',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><style> @media screen and (min-aspect-ratio: 16/9) { #page-header:not(.not-top-img) { background-position: 50% 15% !important;  /* 水平居中，垂直偏上 */ } } </style><meta name="generator" content="Hexo 7.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/images/HARj-O6W4AArs-g.jpeg);"></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/lofter_1770820189577.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Valproate</span></a><a class="nav-page-title" href="/"><span class="site-name">概率统计知识点整理（1） 常见概率分布</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">概率统计知识点整理（1） 常见概率分布</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-02-12T04:57:18.957Z" title="发表于 2026-02-12 12:57:18">2026-02-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-02-12T05:00:47.453Z" title="更新于 2026-02-12 13:00:47">2026-02-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>本文总结了常见的离散与连续性概率分布，介绍了他们的分布记号、概率分布（或密度函数）、期望及方差与可能有的特殊性质，可用作概率统计课程复习或工程使用的快速查阅。</p>
+<table>
+<thead>
+<tr>
+<th align="center">分布（及记号）</th>
+<th align="center">概率分布</th>
+<th align="center">期望\方差</th>
+<th align="center">特殊性质</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">几何分布 <br> $X \sim G(p)$</td>
+<td align="center">$P(X&#x3D;k)&#x3D;q^{k-1}p$  <br> $(q&#x3D;1-p)$</td>
+<td align="center">$E(X)&#x3D;\frac{1}{p}$  <br>  $D(X)&#x3D;\frac{q}{p^2}$</td>
+<td align="center">无记忆性<br>  即$P(X&#x3D;k+t|X$<br>$&#x3D;t) &#x3D;P(X&#x3D;k)$</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://LingYu061126.github.io">尺衡旦日</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lingyu061126.github.io/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/">https://lingyu061126.github.io/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://LingYu061126.github.io" target="_blank">Valproate</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/images/Image_165853659272824.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/02/05/Lingshui_Chen/" title="写在最前"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">写在最前</div></div><div class="info-2"><div class="info-item-1">这是一个偏安一隅的角落。也许他的主人并不希望被打扰，正如主页的标题写的那样：平定、镇静与安宁，这是他曾经所渴望的一生。但他后来又总觉得人生再怎么匆忙，也不能说不了了之就不了了之。于是他把这扇门敞开了。如果无人问津，就让这里变成一片阴雨霉湿之地，他继续唱他那无人问津的歌曲；如果有人愿意驻足停留，那就把他的故事在这里讲给他们听，絮絮叨叨的也好，长话短说的也好，总之写在这里。也许就算他在某一天悄悄离开了，也会有人记得他写下的这些话，这些话能够带来哪怕一丝丝慰藉，让他们从中再获取一点点力量能够支撑着他们继续，这样也就足够了。 预祝我的荒诞过往能为你带来愉悦。 Hope my absurd past can bring you joy. </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/Image_165853659272824.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">尺衡旦日</div><div class="author-info-description">一名普通的人类观察员</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/LingYu061126"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fa-solid fa-battery-full"></i><span>关于我</span></div><div class="announcement_content">电气专业本科生/二次元重度依赖/有些不同于常人的想法/被理性所困</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/" title="概率统计知识点整理（1） 常见概率分布">概率统计知识点整理（1） 常见概率分布</a><time datetime="2026-02-12T04:57:18.957Z" title="发表于 2026-02-12 12:57:18">2026-02-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/05/Lingshui_Chen/" title="写在最前">写在最前</a><time datetime="2026-02-05T15:51:06.291Z" title="发表于 2026-02-05 23:51:06">2026-02-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/Yakusoku_Together.webp);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 尺衡旦日</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
