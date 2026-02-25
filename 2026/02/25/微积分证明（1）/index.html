@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>微积分知识整理 定积分证明(1) (未校对) | Valproate</title><meta name="author" content="尺衡旦日"><meta name="copyright" content="尺衡旦日"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、直接构造变限函数 例 1（四川大学2023-2024级考期末）设 ( f(x) ) 在 ([a, a]) 上非负，且 ( f(0) &#x3D; 0 )，( f’(x) &gt; 0 )。证明： [ \int_0^a x f(x) , dx &gt; \frac{2}{3} a \int_0^a f(x) , dx ] （注：原题区间可能为 ([0,a])，此处保留笔记原文 ([a, a])，但根据后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微积分知识整理 定积分证明(1) (未校对)">
+<meta property="og:url" content="https://lingyu061126.github.io/2026/02/25/%E5%BE%AE%E7%A7%AF%E5%88%86%E8%AF%81%E6%98%8E%EF%BC%881%EF%BC%89/index.html">
+<meta property="og:site_name" content="Valproate">
+<meta property="og:description" content="一、直接构造变限函数 例 1（四川大学2023-2024级考期末）设 ( f(x) ) 在 ([a, a]) 上非负，且 ( f(0) &#x3D; 0 )，( f’(x) &gt; 0 )。证明： [ \int_0^a x f(x) , dx &gt; \frac{2}{3} a \int_0^a f(x) , dx ] （注：原题区间可能为 ([0,a])，此处保留笔记原文 ([a, a])，但根据后">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lingyu061126.github.io/images/Image_165853659272824.jpg">
+<meta property="article:published_time" content="2026-02-25T13:08:02.410Z">
+<meta property="article:modified_time" content="2026-02-25T13:09:46.797Z">
+<meta property="article:author" content="尺衡旦日">
+<meta property="article:tag" content="微积分">
+<meta property="article:tag" content="数学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lingyu061126.github.io/images/Image_165853659272824.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "微积分知识整理 定积分证明(1) (未校对)",
+  "url": "https://lingyu061126.github.io/2026/02/25/%E5%BE%AE%E7%A7%AF%E5%88%86%E8%AF%81%E6%98%8E%EF%BC%881%EF%BC%89/",
+  "image": "https://lingyu061126.github.io/images/Image_165853659272824.jpg",
+  "datePublished": "2026-02-25T13:08:02.410Z",
+  "dateModified": "2026-02-25T13:09:46.797Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "尺衡旦日",
+      "url": "https://LingYu061126.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/Image_165853659272824.jpg"><link rel="canonical" href="https://lingyu061126.github.io/2026/02/25/%E5%BE%AE%E7%A7%AF%E5%88%86%E8%AF%81%E6%98%8E%EF%BC%881%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '微积分知识整理 定积分证明(1) (未校对)',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><style> @media screen and (min-aspect-ratio: 16/9) { #page-header:not(.not-top-img) { background-position: 50% 15% !important;  /* 水平居中，垂直偏上 */ } } </style><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      { left: '$$', right: '$$', display: true },    // 行间公式
+      { left: '$', right: '$', display: false },     // 行内公式 $
+      { left: '\\(', right: '\\)', display: false }, // 行内公式 \( \)
+      { left: '\\[', right: '\\]', display: true }   // 行间公式 \[ \]（可选）
+    ]
+  });">
+</script>
+<meta name="generator" content="Hexo 7.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/images/HARj-O6W4AArs-g.jpeg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/Image_165853659272824.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-book"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/lofter_1770820189577.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Valproate</span></a><a class="nav-page-title" href="/"><span class="site-name">微积分知识整理 定积分证明(1) (未校对)</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-book"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">微积分知识整理 定积分证明(1) (未校对)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-02-25T13:08:02.410Z" title="发表于 2026-02-25 21:08:02">2026-02-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-02-25T13:09:46.797Z" title="更新于 2026-02-25 21:09:46">2026-02-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><hr>
+<h2 id="一、直接构造变限函数">一、直接构造变限函数</h2>
+<p><strong>例 1</strong>（四川大学2023-2024级考期末）设 ( f(x) ) 在 ([a, a]) 上非负，且 ( f(0) = 0 )，( f’(x) &gt; 0 )。证明：<br>
+[<br>
+\int_0^a x f(x) , dx &gt; \frac{2}{3} a \int_0^a f(x) , dx<br>
+]<br>
+（注：原题区间可能为 ([0,a])，此处保留笔记原文 ([a, a])，但根据后续推导应为 ([0,a])。）</p>
+<p><strong>证明</strong>：构造函数<br>
+[<br>
+F(x) = \int_0^x t f(t) , dt - \frac{3}{2} x \int_0^x f(t) , dt<br>
+]<br>
+求导得<br>
+[<br>
+F’(x) = x f(x) - \frac{3}{2} \int_0^x f(t) , dt - \frac{3}{2} x f(x) = \frac{3}{2} x f(x) - \frac{3}{2} \int_0^x f(t) , dt<br>
+]<br>
+再求导<br>
+[<br>
+F’‘(x) = \frac{3}{2} f(x) + \frac{3}{2} x f’(x) - \frac{3}{2} f(x) = \frac{3}{2} x f’(x) \ge 0<br>
+]<br>
+（此处原笔记有笔误，根据导数计算应为 (F’‘(x) = \frac{3}{2} x f’(x))，因 (f’(x)&gt;0) 且 (x\ge0) 故非负。）<br>
+当且仅当 (x=0) 时 (F’'(x)=0)。而 (a&gt;0)，(f(x)\ge0)，(\int_0^a f(x)dx\ge0)，从而有 (F(a)&gt;F(0)=0)，即<br>
+[<br>
+\int_0^a t f(t) , dt &gt; \frac{3}{2} a \int_0^a f(t) , dt<br>
+]<br>
+将 (t) 换为 (x) 即得欲证不等式。</p>
+<hr>
+<p><strong>例 2</strong>（清华2018）设函数 (f(x), g(x)) 在 ([a, b]) 上连续，对任意 (x \in [a, b]) 有<br>
+[<br>
+\int_a^x g(t) , dt &lt; \int_a^x f(t) , dt<br>
+]<br>
+且 (\int_a^b g(t) , dt = \int_a^b f(t) , dt)。求证：<br>
+[<br>
+\int_a^b x f(x) , dx &lt; \int_a^b x g(x) , dx<br>
+]</p>
+<p><strong>证明</strong>：令 (E(x) = f(x) - g(x))，(G(x) = \int_a^x f(t) , dt)，由条件 (\int_a^x g(t) dt &lt; \int_a^x f(t) dt) 知 (G(x) \ge 0)。<br>
+构造并利用分部积分：<br>
+[<br>
+\int_a^b x g(x) , dx - \int_a^b x f(x) , dx = -\int_a^b x \bigl(f(x)-g(x)\bigr) dx = -\int_a^b x , dG(x)<br>
+]<br>
+（其中 (G(x) = \int_a^x (f(t)-g(t)) dt)，注意符号）<br>
+[<br>
+-\int_a^b x , dG(x) = -\left[ x G(x) \Big|_a^b - \int_a^b G(x) dx \right] = -b G(b) + \int_a^b G(x) dx<br>
+]<br>
+由于 (G(b) = \int_a^b (f-g) dx = 0)，故上式 (= \int_a^b G(x) dx \ge 0)。因此<br>
+[<br>
+\int_a^b x g(x) , dx \ge \int_a^b x f(x) , dx<br>
+]<br>
+等号成立仅当 (G(x) \equiv 0)，即 (f=g)，与已知严格不等式矛盾，故严格小于号成立。Q.E.D.</p>
+<p><strong>总结</strong>：这两题的特点为出现了积分上限一致、被积函数不同的待证式，一般均可考虑将其中的上限换为自变量构造变限函数。</p>
+<hr>
+<h2 id="二、先对被积函数泰勒展开再两端积分（或直接积分）">二、先对被积函数泰勒展开再两端积分（或直接积分）</h2>
+<p><strong>例 1</strong>（四川大学2022-2023秋季期末）设 (f(x)) 在 ([0,1]) 上二阶连续可导，(f’(x) \ge 0)，(f’'(x) &lt; 0)。令<br>
+[<br>
+I_n = \int_0^1 f(x^n) , dx \quad (n \in \mathbb{N})<br>
+]<br>
+证明：<br>
+[<br>
+I_n \le f\left(\frac{1}{n}\right)<br>
+]</p>
+<p><strong>证明</strong>：将 (f(x)) 在 (x = \frac{1}{n}) 处展开得<br>
+[<br>
+f(x) = f\left(\frac{1}{n}\right) + f’\left(\frac{1}{n}\right)\left(x - \frac{1}{n}\right) + \frac{f’‘(\xi)}{2!}\left(x - \frac{1}{n}\right)^2<br>
+]<br>
+于是<br>
+[<br>
+f(x^n) = f\left(\frac{1}{n}\right) + f’\left(\frac{1}{n}\right)\left(x^n - \frac{1}{n}\right) + \frac{f’‘(\xi)}{2!}\left(x^n - \frac{1}{n}\right)^2<br>
+]<br>
+积分得<br>
+[<br>
+I_n = f\left(\frac{1}{n}\right) + f’\left(\frac{1}{n}\right) \int_0^1 \left(x^n - \frac{1}{n}\right) dx + \int_0^1 \frac{f’‘(\xi)}{2!}\left(x^n - \frac{1}{n}\right)^2 dx<br>
+]<br>
+由于 (\int_0^1 \left(x^n - \frac{1}{n}\right) dx = \frac{1}{n+1} - \frac{1}{n} &lt; 0)，而 (f’\left(\frac{1}{n}\right) \ge 0)，故第二项 (\le 0)；又 (f’'(\xi) &lt; 0)，第三项 (\le 0)。因此<br>
+[<br>
+I_n \le f\left(\frac{1}{n}\right)<br>
+]<br>
+Q.E.D.</p>
+<p><strong>注</strong>：当 (n=2) 时即得下面特例。</p>
+<p><strong>例 2</strong> 设 (f(x) \in D^2[0,1])，且 (f’(x) &lt; 0)。证明：<br>
+[<br>
+\int_0^1 f(x) , dx \le f\left(\frac{1}{2}\right)<br>
+]<br>
+（此即例1中 (n=2) 的情形。）</p>
+<p><strong>例 3</strong> 设 (f(x) \in D^2[0,1])，证明当 (\exists a,b \in (a,b)) 时（此处原文不清，可能意为 (a&lt;b)），<br>
+[<br>
+\int_a^b f(x) , dx = (b-a) f\left(\frac{a+b}{2}\right) + \frac{(b-a)^3}{24} f’‘(\xi)<br>
+]<br>
+<strong>证明</strong>：将 (f(x)) 在 (x = \frac{a+b}{2}) 处展开：<br>
+[<br>
+f(x) = f\left(\frac{a+b}{2}\right) + f’\left(\frac{a+b}{2}\right)\left(x - \frac{a+b}{2}\right) + \frac{f’‘(\xi)}{2}\left(x - \frac{a+b}{2}\right)^2<br>
+]<br>
+两端积分，注意到 (\int_a^b \left(x - \frac{a+b}{2}\right) dx = 0)，且<br>
+[<br>
+\int_a^b \left(x - \frac{a+b}{2}\right)^2 dx = \frac{(b-a)^3}{12}<br>
+]<br>
+因此<br>
+[<br>
+\int_a^b f(x) , dx = (b-a) f\left(\frac{a+b}{2}\right) + \frac{f’‘(\xi)}{2} \cdot \frac{(b-a)^3}{12} = (b-a) f\left(\frac{a+b}{2}\right) + \frac{(b-a)^3}{24} f’'(\xi)<br>
+]<br>
+Q.E.D.</p>
+<p><strong>提示</strong>：注意，有的时候并不一定要先将积分中被积函数展开，下举两例说明。</p>
+<p><strong>例 4</strong> 设 (f(x) \in C[0,+\infty))，(g(x) = \int_0^x f(t) , dt)，广义积分 (\int_0^\infty f(x) , dx) 收敛。证明：<br>
+[<br>
+\int_0^\infty \frac{g(x)}{x^2} , dx &lt; 4 \int_0^\infty f(x) , dx<br>
+]<br>
+（原笔记中写为 (\int_0^\infty g(x) dx &lt; 4 \int_0^\infty f(x) dx)，可能笔误，应为 (\int_0^\infty \frac{g(x)}{x^2} dx)，因后续推导涉及 (\frac{g(x)}{x})。）</p>
+<p><strong>证明思路</strong>：利用分部积分和Cauchy-Schwarz不等式。先证 (\frac{g(x)}{x}) 有界，并利用<br>
+[<br>
+\int_0^\infty \frac{g(x)}{x^2} dx = \int_0^\infty \frac{1}{x^2} \int_0^x f(t) dt , dx<br>
+]<br>
+交换积分次序或使用Cauchy不等式放缩。原笔记过程较乱，摘录如下：</p>
+<p>“证明 (\frac{g(x)}{x}) 有上界<br>
+[<br>
+\int_0^x \frac{g(t)}{t} dt, \quad \lim_{x \to \infty} \frac{g(x)}{x} = \lim_{x \to \infty} \int_0^x \frac{g(t)}{t} dt = \int_0^\infty f(x) dx<br>
+]<br>
+从右端 (x \to \infty), (g(x) \geq 0), 从而 (\frac{g(x)}{x} \geq 0)。<br>
+(\frac{g(x)}{x} \leq 0) 故缩<br>
+从而 ((\int_0^x \frac{g(t)}{t})^2 \leq (2 \int_0^x \frac{f(t)}{t})^2 \leq 4 \int_0^x f^2(x))。<br>
+再次使用 Cauchy 不等式<br>
+[<br>
+\int_0^x \frac{g(t)}{t} \leq 4 \int_0^x f^2(x)<br>
+]<br>
+比较审敛法知原式积分收敛。 (Q.E.D.)”</p>
+<p>此处保留原笔记，但显然有混乱，我们按原样呈现。</p>
+<hr>
+<p><strong>例 5</strong> 设 (f(x) \in C[0,1])，且满足<br>
+[<br>
+|f(x)| \le 1 + \int_0^x |f(t)| , dt, \quad \forall x \in [0,1]<br>
+]<br>
+证明：(|f(x)| \le e^x)。</p>
+<p><strong>证明</strong>：令 (g(x) = \int_0^x |f(t)| , dt)，则 (g’(x) = |f(x)|)，且由条件得<br>
+[<br>
+g’(x) \le 1 + g(x)<br>
+]<br>
+解此一阶线性微分不等式：((g(x)e^{-x})’ \le e^{-x})，积分得<br>
+[<br>
+g(x)e^{-x} \le \int_0^x e^{-t} dt + C<br>
+]<br>
+取 (C=0)（因 (g(0)=0)），则<br>
+[<br>
+g(x) \le e^x \int_0^x e^{-t} dt = e^x (1 - e^{-x}) = e^x - 1<br>
+]<br>
+但我们需要的是 (|f(x)|) 的界，由 (g’(x) \le 1 + g(x) \le 1 + (e^x - 1) = e^x)，故 (|f(x)| = g’(x) \le e^x)。Q.E.D.</p>
+<hr>
+<p><strong>总结</strong>：当待证式中仅出现一个积分且有高阶导数时，即可考虑先展开被积函数再两端积分（一般亦可直接展开变限函数，但相对繁琐）。当不符合高阶导数时，亦可考虑直接积分或换元，将积分不等式转为非积分部分（参见后续步骤）。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://LingYu061126.github.io">尺衡旦日</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lingyu061126.github.io/2026/02/25/%E5%BE%AE%E7%A7%AF%E5%88%86%E8%AF%81%E6%98%8E%EF%BC%881%EF%BC%89/">https://lingyu061126.github.io/2026/02/25/%E5%BE%AE%E7%A7%AF%E5%88%86%E8%AF%81%E6%98%8E%EF%BC%881%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://LingYu061126.github.io" target="_blank">Valproate</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BE%AE%E7%A7%AF%E5%88%86/">微积分</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E5%AD%A6/">数学</a></div><div class="post-share"><div class="social-share" data-image="/images/Image_165853659272824.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/02/24/%E6%81%92%E5%AE%9A%E7%94%B5%E6%B5%81%E5%9C%BA/" title="电磁场知识整理(2) 恒定电流场 (第二部分校对未完成)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">电磁场知识整理(2) 恒定电流场 (第二部分校对未完成)</div></div><div class="info-2"><div class="info-item-1">以下电磁场知识点整理及题目均基于 马西奎 工程电磁场导论 北京 高等教育出版社, 2000. Print. 面向21世纪课程教材 Mian Xiang 21shi Ji Ke Cheng Jiao Cai = Textbook Series for 21st Century Eng. （第一版） 旨在为四川大学电气工程及其自动化专业的电磁场课程提供一个知识纲要性质的文本，以供课程平时学习及期末复习使用。考点及考试范围主要参考王仲老师的讲课内容及2024-2025学年期末考试题目，由于历年考试范围不同，其覆盖范围可能与实际考试范围有所出入。 由于转换整理工程量较大，可能存在失误，如笔记存在任何问题，可联系博客主QQ：1277492713进行反馈。 第二章 恒定电流场 一、知识点  1. 电流与电流密度 电荷在某个体积/面积/时间曲线内定向流动形成电流，电流密度 J⃗=ρv⃗\vec{J} = \rho \vec{v}J=ρv，其中 ρ\rhoρ 为电荷体/面/线密度，v⃗\vec{v}v 为定向移动速度。它们分别对应面电流/线电流密度及线电流，并有 I=∫SJ⃗⋅dS⃗I=∫l(K...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/" title="概率统计知识点整理（1） 常见概率分布"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-12</div><div class="info-item-2">概率统计知识点整理（1） 常见概率分布</div></div><div class="info-2"><div class="info-item-1">本文总结了常见的离散与连续性概率分布，列表介绍了他们的分布名称及记号、概率分布（或密度函数(概率部分)或构造方式(统计部分)）、期望及方差与可能有的特殊性质，可用作概率统计课程复习或工程使用的快速查阅。    分布（及记号） 概率分布 期望\方差 特殊性质     几何分布  X∼G(p)X \sim G(p)X∼G(p) P(X=k)=qk−1pP(X=k)=q^{k-1}pP(X=k)=qk−1p   (q=1−p)(q=1-p)(q=1−p) E(X)=1pE(X)=\frac{1}{p}E(X)=p1​    D(X)=qp2D(X)=\frac{q}{p^2}D(X)=p2q​ 无记忆性  即P(X&gt;k+t∣XP(X&gt;k+t \mid XP(X&gt;k+t∣X&gt;t)=P(X&gt;k)&gt;t) =P(X&gt;k)&gt;t)=P(X&gt;k)   二项分布  X∼B(n,p)X \sim B(n,p)X∼B(n,p) P(X=k)=Cnkqn−kpkP(X=k)=\text{C}_{n}^{k}q^{n-k}p^kP(X=k)=Cnk​qn−...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/Image_165853659272824.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">尺衡旦日</div><div class="author-info-description">一名普通的人类观察员</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/LingYu061126"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fa-solid fa-battery-full"></i><span>关于我</span></div><div class="announcement_content">电气专业本科生/二次元重度依赖/有些不同于常人的想法/被理性所困</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%9B%B4%E6%8E%A5%E6%9E%84%E9%80%A0%E5%8F%98%E9%99%90%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">一、直接构造变限函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%88%E5%AF%B9%E8%A2%AB%E7%A7%AF%E5%87%BD%E6%95%B0%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%86%8D%E4%B8%A4%E7%AB%AF%E7%A7%AF%E5%88%86%EF%BC%88%E6%88%96%E7%9B%B4%E6%8E%A5%E7%A7%AF%E5%88%86%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、先对被积函数泰勒展开再两端积分（或直接积分）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/25/%E5%BE%AE%E7%A7%AF%E5%88%86%E8%AF%81%E6%98%8E%EF%BC%881%EF%BC%89/" title="微积分知识整理 定积分证明(1) (未校对)">微积分知识整理 定积分证明(1) (未校对)</a><time datetime="2026-02-25T13:08:02.410Z" title="发表于 2026-02-25 21:08:02">2026-02-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/24/%E6%81%92%E5%AE%9A%E7%94%B5%E6%B5%81%E5%9C%BA/" title="电磁场知识整理(2) 恒定电流场 (第二部分校对未完成)">电磁场知识整理(2) 恒定电流场 (第二部分校对未完成)</a><time datetime="2026-02-24T09:39:19.185Z" title="发表于 2026-02-24 17:39:19">2026-02-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/13/%E9%9D%99%E7%94%B5%E5%9C%BA/" title="电磁场知识整理(1) 静电场 (部分题目图片待添加)">电磁场知识整理(1) 静电场 (部分题目图片待添加)</a><time datetime="2026-02-13T02:23:14.146Z" title="发表于 2026-02-13 10:23:14">2026-02-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/12/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/" title="概率统计知识点整理（1） 常见概率分布">概率统计知识点整理（1） 常见概率分布</a><time datetime="2026-02-12T04:57:18.957Z" title="发表于 2026-02-12 12:57:18">2026-02-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/05/Lingshui_Chen/" title="写在最前">写在最前</a><time datetime="2026-02-05T15:51:06.291Z" title="发表于 2026-02-05 23:51:06">2026-02-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/Yakusoku_Together.webp);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 尺衡旦日</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
