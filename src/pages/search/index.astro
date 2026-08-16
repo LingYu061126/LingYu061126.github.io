@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="搜索">
+  <section class="search-panel">
+    <p class="eyebrow">SEARCH</p>
+    <h1>搜索文章</h1>
+    <div class="search-box glass-card"><span>⌕</span><input id="search-input" type="search" placeholder="输入标题、标签或正文关键词" autocomplete="off" /></div>
+    <p id="search-status">输入关键词开始搜索</p>
+    <div id="search-results" class="search-results"></div>
+  </section>
+  <script is:inline>
+    const input = document.querySelector('#search-input');
+    const results = document.querySelector('#search-results');
+    const status = document.querySelector('#search-status');
+    let pagefind;
+    async function search(value) {
+      if (!value.trim()) { results.innerHTML = ''; status.textContent = '输入关键词开始搜索'; return; }
+      try {
+        pagefind ||= await import('/pagefind/pagefind.js');
+        const response = await pagefind.search(value);
+        const items = await Promise.all(response.results.slice(0, 12).map((item) => item.data()));
+        status.textContent = `找到 ${response.results.length} 条结果`;
+        results.innerHTML = items.map((item) => `<a class="search-result glass-card" href="${item.url}"><strong>${item.meta.title}</strong><span>${item.excerpt}</span></a>`).join('');
+      } catch { status.textContent = '搜索索引需要在执行 npm run build 后使用'; }
+    }
+    let timer;
+    input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => search(input.value), 180); });
+  </script>
+</BaseLayout>

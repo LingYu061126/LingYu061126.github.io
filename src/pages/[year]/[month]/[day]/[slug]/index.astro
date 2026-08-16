@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+import { formatDate } from '../../../../../consts';
+import { siteConfig } from '../../../../../config';
+import WalineComments from '../../../../../components/WalineComments.astro';
+import ShareButtons from '../../../../../components/ShareButtons.astro';
+
+function postPath(post: { data: { date: Date; slug: string } }) {
+  const [year, month, day] = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(post.data.date).split('-');
+  return `/${year}/${month}/${day}/${post.data.slug}/`;
+}
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => {
+    const [year, month, day] = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).format(post.data.date).split('-');
+    return { params: { year, month, day, slug: post.data.slug }, props: { post } };
+  });
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const chronological = [...allPosts].reverse();
+const currentIndex = chronological.findIndex((item) => item.id === post.id);
+const previousPost = currentIndex > 0 ? chronological[currentIndex - 1] : undefined;
+const nextPost = currentIndex < chronological.length - 1 ? chronological[currentIndex + 1] : undefined;
+const relatedPosts = allPosts
+  .filter((item) => item.id !== post.id)
+  .map((item) => ({
+    item,
+    score: item.data.tags.filter((tag) => post.data.tags.includes(tag)).length * 2
+      + item.data.categories.filter((category) => post.data.categories.includes(category)).length,
+  }))
+  .filter(({ score }) => score > 0)
+  .sort((a, b) => b.score - a.score || b.item.data.date.valueOf() - a.item.data.date.valueOf())
+  .slice(0, 3)
+  .map(({ item }) => item);
+const articlePath = postPath(post);
+---
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="article-shell">
+    <header class="article-head">
+      <div class="chips">{post.data.tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>)}</div>
+      <h1>{post.data.title}</h1>
+      <p><time datetime={post.data.date.toISOString()}>发布于 {formatDate(post.data.date)}</time>{siteConfig.features.showReadingTime && <> · 约 {Math.max(1, Math.ceil((post.body?.length ?? 0) / 700))} 分钟阅读</>}{siteConfig.features.showVisitorStats && <> · <span id="busuanzi_container_page_pv">阅读 <span id="busuanzi_value_page_pv">--</span></span></>}</p>
+    </header>
+    <div class="article-grid">
+      <div>
+        <div class="prose" data-pagefind-body><Content /></div>
+        <section class="article-copyright glass-card" aria-label="文章版权信息">
+          <dl>
+            <div><dt>作者</dt><dd>{siteConfig.author}</dd></div>
+            <div><dt>文章链接</dt><dd><a href={new URL(articlePath, siteConfig.siteUrl).href}>{new URL(articlePath, siteConfig.siteUrl).href}</a></dd></div>
+            <div><dt>版权协议</dt><dd>除特别声明外，本文采用 <a href={siteConfig.copyright.licenseUrl} rel="license external">{siteConfig.copyright.license}</a> 协议</dd></div>
+          </dl>
+        </section>
+        {siteConfig.features.showShare && <ShareButtons path={articlePath} title={post.data.title} />}
+        {(previousPost || nextPost) && <nav class="post-navigation" aria-label="相邻文章">
+          {previousPost ? <a class="glass-card" href={postPath(previousPost)}><small>上一篇</small><strong>{previousPost.data.title}</strong></a> : <span />}
+          {nextPost ? <a class="glass-card next" href={postPath(nextPost)}><small>下一篇</small><strong>{nextPost.data.title}</strong></a> : <span />}
+        </nav>}
+        {relatedPosts.length > 0 && <section class="related-posts glass-card">
+          <h2>相关文章</h2>
+          <div>{relatedPosts.map((item) => <a href={postPath(item)}><strong>{item.data.title}</strong><small>{formatDate(item.data.date)}</small></a>)}</div>
+        </section>}
+        <WalineComments path={articlePath} title="文章评论" />
+      </div>
+      {siteConfig.features.showToc && headings.length > 2 && <aside class="toc" data-pagefind-ignore><strong>本文目录</strong><ol>{headings.filter((h) => h.depth <= 3).map((h) => <li class={`depth-${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></aside>}
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.tags.includes('碎碎念')))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<BaseLayout title="碎碎念">
+  <section class="content-shell page-head">
+    <p class="eyebrow">THOUGHTS</p>
+    <h1>碎碎念</h1>
+    <p class="page-intro">一些无法被归入知识笔记的想法、感受与漫无目的的文字。</p>
+    <PostList posts={posts} />
+  </section>
+</BaseLayout>

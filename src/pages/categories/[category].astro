@@ -1,0 +1,11 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return [...new Set(posts.flatMap((p) => p.data.categories))].map((category) => ({ params: { category }, props: { category, posts: posts.filter((p) => p.data.categories.includes(category)) } }));
+}
+const { category, posts } = Astro.props;
+---
+<BaseLayout title={`分类：${category}`}><section class="content-shell page-head"><p class="eyebrow">CATEGORY</p><h1>{category}</h1><PostList posts={posts} /></section></BaseLayout>

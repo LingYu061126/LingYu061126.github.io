@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import ProfileCard from '../../components/ProfileCard.astro';
+import Pagination from '../../components/Pagination.astro';
+import { siteConfig } from '../../config';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts', ({ data }) => !data.draft && !data.tags.includes('碎碎念')))
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const totalPages = Math.ceil(posts.length / siteConfig.features.postsPerPage);
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
+    const page = index + 2;
+    return { params: { page: String(page) }, props: { posts, page, totalPages } };
+  });
+}
+
+const { posts, page, totalPages } = Astro.props;
+const start = (page - 1) * siteConfig.features.postsPerPage;
+---
+<BaseLayout title={`文章列表 · 第 ${page} 页`}>
+  <div class="home-grid content-shell-wide paged-home">
+    {siteConfig.features.showProfile && <div class="sidebar-column"><button class="sidebar-toggle" type="button" aria-label="收起侧栏" aria-expanded="true">‹</button><ProfileCard /></div>}
+    <section class="feed-column">
+      <div class="section-heading"><h1>最近文章</h1><span>第 {page} / {totalPages} 页</span></div>
+      <PostList posts={posts.slice(start, start + siteConfig.features.postsPerPage)} />
+      <Pagination currentPage={page} totalPages={totalPages} />
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, postPath } from '../consts';
+interface Props { posts: CollectionEntry<'posts'>[] }
+const { posts } = Astro.props;
+---
+<div class="post-list">
+  {posts.map((post) => (
+    <article class="post-card glass-card">
+      <div class="post-card-meta"><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>{post.data.categories[0] && <span>{post.data.categories[0]}</span>}</div>
+      <h2><a href={postPath(post.data.slug, post.data.date)}>{post.data.title}</a></h2>
+      {post.data.description && <p>{post.data.description}</p>}
+      <div class="chips">{post.data.tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>)}</div>
+      <a class="read-more" href={postPath(post.data.slug, post.data.date)}>阅读全文 <span>→</span></a>
+    </article>
+  ))}
+</div>

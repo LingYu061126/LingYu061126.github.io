@@ -1,0 +1,45 @@
+---
+import '@waline/client/waline.css';
+import { siteConfig } from '../config';
+
+interface Props { path: string; title?: string }
+const { path, title = '评论' } = Astro.props;
+const options = siteConfig.waline;
+---
+<div
+  class="waline-card glass-card"
+  data-waline
+  data-server-url={options.serverURL}
+  data-path={path}
+  data-lang={options.lang}
+  data-login={options.login}
+  data-required-meta={JSON.stringify(options.requiredMeta)}
+  data-word-limit={options.wordLimit}
+  data-page-size={options.pageSize}
+>
+  <h2 class="waline-title">{title}</h2>
+  <div class="waline-loading">正在加载留言板…</div>
+</div>
+
+<script>
+  import { init } from '@waline/client';
+
+  document.addEventListener('astro:page-load', () => {
+    const container = document.querySelector<HTMLElement>('[data-waline]');
+    if (!container || container.dataset.initialized) return;
+    container.dataset.initialized = 'true';
+    container.querySelector('.waline-loading')?.remove();
+    init({
+      el: container,
+      serverURL: container.dataset.serverUrl ?? '',
+      path: container.dataset.path,
+      lang: (container.dataset.lang ?? 'zh-CN') as 'zh-CN',
+      dark: 'html[data-theme="dark"]',
+      login: (container.dataset.login ?? 'enable') as 'enable',
+      requiredMeta: JSON.parse(container.dataset.requiredMeta ?? '[]'),
+      wordLimit: Number(container.dataset.wordLimit ?? 500),
+      pageSize: Number(container.dataset.pageSize ?? 10),
+      commentSorting: 'latest',
+    });
+  });
+</script>

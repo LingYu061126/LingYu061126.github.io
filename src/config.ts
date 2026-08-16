@@ -1,0 +1,71 @@
+export const siteConfig = {
+  title: 'Valproate',
+  subtitle: 'Calmness, composure, and tranquility',
+  description: '一名普通的人类观察员',
+  author: '尺衡旦日',
+  lang: 'zh-CN',
+  siteUrl: 'https://lingyu061126.github.io',
+  startYear: 2025,
+  banner: {
+    enable: true,
+    image: '/images/lofter_1770820189577.jpg',
+    position: 'center 43%',
+    credit: '',
+  },
+  profile: {
+    avatar: '/images/Image_165853659272824.jpg',
+    bio: '电气专业本科生 / 二次元重度依赖 / 有些不同于常人的想法 / 被理性所困',
+  },
+  theme: {
+    hue: 250,
+    saturation: 78,
+    lightness: 68,
+    cardOpacity: 0.82,
+    radius: 18,
+  },
+  navigation: [
+    { label: '首页', href: '/' },
+    { label: '归档', href: '/archives/' },
+    { label: '碎碎念', href: '/shuoshuo/' },
+    { label: '留言板', href: '/message/' },
+    { label: '标签', href: '/tags/' },
+    { label: '友链', href: '/link/' },
+    { label: '关于', href: '/about/' },
+  ],
+  social: [
+    { label: 'GitHub', href: 'https://github.com/LingYu061126' },
+    { label: 'RSS', href: '/rss.xml' },
+  ],
+  friends: [
+    // 示例：取消下面几行的注释，并替换为真实信息即可添加友链。
+    // {
+    //   name: '朋友的博客',
+    //   url: 'https://example.com',
+    //   avatar: 'https://example.com/avatar.png',
+    //   description: '一句简短的介绍',
+    // },
+  ] as Array<{ name: string; url: string; avatar: string; description: string }>,
+  waline: {
+    serverURL: 'https://valproate-waline.vercel.app',
+    lang: 'zh-CN',
+    login: 'enable',
+    requiredMeta: ['nick'],
+    wordLimit: 500,
+    pageSize: 10,
+  },
+  copyright: {
+    license: 'CC BY-NC-SA 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans',
+  },
+  features: {
+    showBanner: true,
+    showProfile: true,
+    showToc: true,
+    showReadingTime: true,
+    showSearch: true,
+    showVisitorStats: true,
+    showShare: true,
+    showPageTransitions: true,
+    postsPerPage: 8,
+  },
+} as const;

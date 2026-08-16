@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="页面未找到" description="你访问的页面不存在">
+  <section class="not-found glass-card">
+    <p class="not-found-code">404</p>
+    <h1>这一页暂时不在这里</h1>
+    <p>可能是地址写错了，或者文章已经搬到了别处。</p>
+    <div>
+      <a class="primary-action" href="/">返回首页</a>
+      <a href="/archives/">查看归档</a>
+      <a href="/search/">搜索文章</a>
+    </div>
+  </section>
+</BaseLayout>

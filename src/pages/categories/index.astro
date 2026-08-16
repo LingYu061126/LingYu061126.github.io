@@ -1,0 +1,7 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+const categories = [...new Set(posts.flatMap((post) => post.data.categories))].sort((a, b) => a.localeCompare(b, 'zh-CN'));
+---
+<BaseLayout title="分类"><section class="content-shell page-head"><p class="eyebrow">CATEGORIES</p><h1>文章分类</h1><div class="tag-cloud">{categories.map((category) => <a href={`/categories/${encodeURIComponent(category)}/`}>{category}<small>{posts.filter((p) => p.data.categories.includes(category)).length}</small></a>)}</div></section></BaseLayout>

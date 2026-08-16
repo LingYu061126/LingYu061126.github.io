@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../config';
+---
+<BaseLayout title="友链">
+  <section class="content-shell page-head">
+    <p class="eyebrow">FRIENDS</p>
+    <h1>友链</h1>
+    <p class="page-intro">在互联网的广阔角落里，遇见一些有趣的灵魂。</p>
+    {siteConfig.friends.length > 0 ? (
+      <div class="friend-grid">
+        {siteConfig.friends.map((friend) => (
+          <a class="friend-card glass-card" href={friend.url} target="_blank" rel="noopener noreferrer">
+            <img src={friend.avatar} alt={`${friend.name}的头像`} loading="lazy" />
+            <div><strong>{friend.name}</strong><p>{friend.description}</p><small>{new URL(friend.url).hostname}</small></div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="empty-card glass-card">
+        <span>✦</span><h2>这里还很安静</h2><p>友链配置完成后，它们会出现在这里。</p>
+      </div>
+    )}
+    <article class="link-notice glass-card">
+      <h2>本站信息</h2>
+      <dl><div><dt>名称</dt><dd>{siteConfig.title}</dd></div><div><dt>地址</dt><dd>{siteConfig.siteUrl}</dd></div><div><dt>头像</dt><dd>{siteConfig.profile.avatar}</dd></div><div><dt>简介</dt><dd>{siteConfig.description}</dd></div></dl>
+    </article>
+  </section>
+</BaseLayout>

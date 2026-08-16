@@ -1,0 +1,171 @@
+---
+import '../styles/global.css';
+import 'katex/dist/katex.min.css';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { siteConfig } from '../config';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props { title?: string; description?: string }
+const { title, description = SITE_DESCRIPTION } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE_TITLE}` : SITE_TITLE;
+---
+<!doctype html>
+<html lang={siteConfig.lang} style={`--hue:${siteConfig.theme.hue};--sat:${siteConfig.theme.saturation}%;--lit:${siteConfig.theme.lightness}%;--card-opacity:${siteConfig.theme.cardOpacity};--radius:${siteConfig.theme.radius}px`}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/images/Image_165853659272824.jpg" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
+    <title>{pageTitle}</title>
+    {siteConfig.features.showPageTransitions && <ClientRouter />}
+    <script is:inline>
+      const saved = localStorage.getItem('theme');
+      document.documentElement.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const savedHue = localStorage.getItem('theme-hue');
+      if (savedHue) document.documentElement.style.setProperty('--hue', savedHue);
+    </script>
+  </head>
+  <body>
+    <header class="site-header glass-card">
+      <a class="brand" href="/">{siteConfig.title}</a>
+      <nav aria-label="主导航">
+        {siteConfig.navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+        {siteConfig.features.showSearch && <a class="search-link" href="/search/" aria-label="搜索">⌕</a>}
+        <div class="theme-color-control">
+          <button id="color-panel-toggle" aria-label="调整主题颜色" aria-expanded="false">✦</button>
+          <div id="color-panel" class="color-panel glass-card" data-default-hue={siteConfig.theme.hue} hidden>
+            <div class="color-panel-head"><strong>主题颜色</strong><button id="color-reset" type="button">恢复默认</button></div>
+            <label for="hue-slider">色相 <output id="hue-output">{siteConfig.theme.hue}°</output></label>
+            <input id="hue-slider" type="range" min="0" max="360" value={siteConfig.theme.hue} />
+            <div class="color-presets" aria-label="主题色预设">
+              {[205,250,290,335,20,155].map((hue) => <button type="button" data-hue={hue} style={`--preset-hue:${hue}`} aria-label={`色相 ${hue}`}></button>)}
+            </div>
+          </div>
+        </div>
+        <button id="theme-toggle" aria-label="切换深色模式">◐</button>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer>© {siteConfig.startYear}–{new Date().getFullYear()} {siteConfig.author} · Built with Astro</footer>
+    <button id="back-to-top" type="button" aria-label="返回顶部" title="返回顶部">↑</button>
+    {siteConfig.features.showVisitorStats && <script is:inline async src="https://busuanzi.9420.ltd/js" data-astro-rerun></script>}
+    <script>
+      document.addEventListener('astro:page-load', () => {
+      const root = document.documentElement;
+      document.querySelector('#theme-toggle')?.addEventListener('click', () => {
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        localStorage.setItem('theme', next);
+      });
+      const panelToggle = document.querySelector<HTMLButtonElement>('#color-panel-toggle');
+      const panel = document.querySelector<HTMLElement>('#color-panel');
+      const slider = document.querySelector<HTMLInputElement>('#hue-slider');
+      const output = document.querySelector<HTMLOutputElement>('#hue-output');
+      const applyHue = (hue: string) => {
+        root.style.setProperty('--hue', hue);
+        if (slider) slider.value = hue;
+        if (output) output.value = `${hue}°`;
+        localStorage.setItem('theme-hue', hue);
+      };
+      const savedHue = localStorage.getItem('theme-hue');
+      if (savedHue) applyHue(savedHue);
+      panelToggle?.addEventListener('click', () => {
+        if (!panel) return;
+        panel.hidden = !panel.hidden;
+        panelToggle.setAttribute('aria-expanded', String(!panel.hidden));
+      });
+      slider?.addEventListener('input', () => applyHue(slider.value));
+      document.querySelectorAll<HTMLButtonElement>('[data-hue]').forEach((button) => button.addEventListener('click', () => applyHue(button.dataset.hue ?? '250')));
+      document.querySelector('#color-reset')?.addEventListener('click', () => {
+        const defaultHue = panel?.dataset.defaultHue ?? '250';
+        localStorage.removeItem('theme-hue');
+        root.style.setProperty('--hue', defaultHue);
+        if (slider) slider.value = defaultHue;
+        if (output) output.value = `${defaultHue}°`;
+      });
+      document.addEventListener('click', (event) => {
+        if (panel && !panel.hidden && !(event.target as Element).closest('.theme-color-control')) {
+          panel.hidden = true;
+          panelToggle?.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      const backToTop = document.querySelector<HTMLButtonElement>('#back-to-top');
+      const updateBackToTop = () => backToTop?.classList.toggle('is-visible', window.scrollY > 500);
+      window.addEventListener('scroll', updateBackToTop, { passive: true });
+      updateBackToTop();
+      backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      document.querySelectorAll<HTMLElement>('.prose pre').forEach((pre) => {
+        if (pre.parentElement?.classList.contains('code-block')) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block';
+        const toolbar = document.createElement('div');
+        toolbar.className = 'code-toolbar';
+        const code = pre.querySelector('code');
+        const languageClass = [...(code?.classList ?? [])].find((name) => name.startsWith('language-'));
+        const language = languageClass?.replace('language-', '') || pre.dataset.language || '代码';
+        const label = document.createElement('span');
+        label.textContent = language;
+        const copy = document.createElement('button');
+        copy.type = 'button';
+        copy.textContent = '复制';
+        copy.setAttribute('aria-label', `复制${language}代码`);
+        copy.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(code?.textContent ?? pre.textContent ?? '');
+            copy.textContent = '已复制';
+          } catch {
+            copy.textContent = '复制失败';
+          }
+          window.setTimeout(() => { copy.textContent = '复制'; }, 1600);
+        });
+        toolbar.append(label, copy);
+        pre.before(wrapper);
+        wrapper.append(toolbar, pre);
+      });
+
+      const sidebarToggle = document.querySelector<HTMLButtonElement>('.sidebar-toggle');
+      const homeGrid = document.querySelector<HTMLElement>('.home-grid');
+      const applySidebar = (collapsed: boolean) => {
+        homeGrid?.classList.toggle('sidebar-collapsed', collapsed);
+        sidebarToggle?.setAttribute('aria-expanded', String(!collapsed));
+        sidebarToggle?.setAttribute('aria-label', collapsed ? '展开侧栏' : '收起侧栏');
+        if (sidebarToggle) sidebarToggle.textContent = collapsed ? '›' : '‹';
+      };
+      if (sidebarToggle && homeGrid) {
+        applySidebar(localStorage.getItem('sidebar-collapsed') === 'true');
+        sidebarToggle.addEventListener('click', () => {
+          const collapsed = !homeGrid.classList.contains('sidebar-collapsed');
+          applySidebar(collapsed);
+          localStorage.setItem('sidebar-collapsed', String(collapsed));
+        });
+      }
+
+      document.querySelectorAll<HTMLImageElement>('img').forEach((img) => {
+        if (!img.hasAttribute('decoding')) img.decoding = 'async';
+        img.addEventListener('error', () => {
+          if (img.dataset.fallbackApplied) return;
+          img.dataset.fallbackApplied = 'true';
+          img.src = '/images/image-fallback.svg';
+          img.classList.add('image-fallback');
+        });
+      });
+
+      document.querySelectorAll<HTMLElement>('.typed-subtitle').forEach((element) => {
+        const text = element.dataset.text ?? element.textContent ?? '';
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        element.textContent = '';
+        let index = 0;
+        const type = () => {
+          element.textContent = text.slice(0, index++);
+          if (index <= text.length) window.setTimeout(type, 65);
+        };
+        window.setTimeout(type, 300);
+      });
+      });
+    </script>
+  </body>
+</html>

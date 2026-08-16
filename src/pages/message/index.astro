@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WalineComments from '../../components/WalineComments.astro';
+---
+<BaseLayout title="留言板">
+  <section class="message-page">
+    <header class="message-head">
+      <p class="eyebrow">MESSAGE</p>
+      <h1>留言板</h1>
+      <p>想说些什么都可以。你的留言会被保存在原有的 Waline 服务中。</p>
+    </header>
+    <WalineComments path="/message/" title="留言" />
+  </section>
+</BaseLayout>
