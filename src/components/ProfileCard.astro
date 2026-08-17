@@ -6,6 +6,7 @@ const posts = await getCollection('posts', ({ data }) => !data.draft);
 const categories = new Set(posts.flatMap((post) => post.data.categories));
 const tags = new Set(posts.flatMap((post) => post.data.tags));
 const categoryList = [...categories]
+  .filter((name) => name !== '迷思')
   .map((name) => ({ name, count: posts.filter((post) => post.data.categories.includes(name)).length }))
   .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'zh-CN'));
 const tagList = [...tags]
