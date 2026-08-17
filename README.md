@@ -27,3 +27,15 @@ npm run build
 - `features`：Banner、侧栏、目录、阅读时间和搜索开关
 
 文章标题、日期、标签和草稿状态在每篇 Markdown 顶部的 frontmatter 中配置。
+
+## 发布
+
+先提交本地改动，再运行部署命令：
+
+```bash
+git add .
+git commit -m "Add new post"
+npm run deploy
+```
+
+`npm run deploy` 会先完成 Astro 检查与构建，再将当前 `main` 分支推送到 GitHub，由 GitHub Actions 自动发布到 Pages。它不会自动暂存或提交文件。
