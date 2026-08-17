@@ -27,8 +27,8 @@ export const siteConfig = {
       mode: 'soft',
       background: '/images/card_after_training.png',
       position: 'center center',
-      blur: 18,
-      saturation: 1.4,
+      blur: 20,
+      saturation: 2,
     },
   },
   navigation: [

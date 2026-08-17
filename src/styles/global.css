@@ -8,13 +8,13 @@
   --muted: hsl(var(--hue),10%,46%);
   --line: hsla(var(--hue),22%,46%,.16);
   --shadow: 0 8px 32px hsla(var(--hue),30%,25%,.09);
-  --glass-card-bg:rgba(255,255,255,.68);
-  --glass-article-bg:rgba(255,255,255,.82);
+  --glass-card-bg:rgba(255,255,255,.79);
+  --glass-article-bg:rgba(255,255,255,.9);
   color-scheme: light;
   font-family: Inter,ui-sans-serif,system-ui,-apple-system,"Noto Sans SC",sans-serif;
 }
 :root[data-theme="dark"] {
-  --bg:hsl(var(--hue),18%,11%);--surface:hsla(var(--hue),16%,17%,var(--card-opacity));--surface-solid:hsl(var(--hue),16%,17%);--text:hsl(var(--hue),18%,91%);--muted:hsl(var(--hue),10%,66%);--line:hsla(var(--hue),25%,80%,.13);--primary-soft:hsla(var(--hue),70%,65%,.13);--shadow:0 10px 36px rgba(0,0,0,.22);--glass-card-bg:hsla(var(--hue),16%,12%,.66);--glass-article-bg:hsla(var(--hue),16%,12%,.82);color-scheme:dark
+  --bg:hsl(var(--hue),18%,11%);--surface:hsla(var(--hue),16%,17%,var(--card-opacity));--surface-solid:hsl(var(--hue),16%,17%);--text:hsl(var(--hue),18%,91%);--muted:hsl(var(--hue),10%,66%);--line:hsla(var(--hue),25%,80%,.13);--primary-soft:hsla(var(--hue),70%,65%,.13);--shadow:0 10px 36px rgba(0,0,0,.22);--glass-card-bg:hsla(var(--hue),16%,12%,.79);--glass-article-bg:hsla(var(--hue),16%,12%,.9);color-scheme:dark
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background-image:linear-gradient(hsla(var(--hue),30%,96%,.14),hsla(var(--hue),30%,96%,.14)),var(--glass-background);background-position:center,var(--glass-position);background-size:cover;background-attachment:fixed;color:var(--text);line-height:1.75;transition:background .25s,color .25s}a{color:inherit;text-decoration:none}button{font:inherit}.glass-card{background:var(--glass-card-bg);border:1px solid rgba(255,255,255,.32);box-shadow:var(--shadow);backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturation));-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-saturation));border-radius:var(--radius)}
 :root[data-theme="dark"] body{background-image:linear-gradient(rgba(8,10,16,.28),rgba(8,10,16,.28)),var(--glass-background)}
