@@ -4,7 +4,6 @@ import BaseLayout from '../../../../../layouts/BaseLayout.astro';
 import { formatDate } from '../../../../../consts';
 import { siteConfig } from '../../../../../config';
 import WalineComments from '../../../../../components/WalineComments.astro';
-import ShareButtons from '../../../../../components/ShareButtons.astro';
 
 function postPath(post: { data: { date: Date; slug: string } }) {
   const [year, month, day] = new Intl.DateTimeFormat('en-CA', {
@@ -61,7 +60,6 @@ const articlePath = postPath(post);
             <div><dt>版权协议</dt><dd>除特别声明外，本文采用 <a href={siteConfig.copyright.licenseUrl} rel="license external">{siteConfig.copyright.license}</a> 协议</dd></div>
           </dl>
         </section>
-        {siteConfig.features.showShare && <ShareButtons path={articlePath} title={post.data.title} />}
         {(previousPost || nextPost) && <nav class="post-navigation" aria-label="相邻文章">
           {previousPost ? <a class="glass-card" href={postPath(previousPost)}><small>上一篇</small><strong>{previousPost.data.title}</strong></a> : <span />}
           {nextPost ? <a class="glass-card next" href={postPath(nextPost)}><small>下一篇</small><strong>{nextPost.data.title}</strong></a> : <span />}

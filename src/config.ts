@@ -64,7 +64,6 @@ export const siteConfig = {
     showReadingTime: true,
     showSearch: true,
     showVisitorStats: true,
-    showShare: true,
     showPageTransitions: true,
     postsPerPage: 8,
   },
