@@ -22,6 +22,14 @@ export const siteConfig = {
     lightness: 68,
     cardOpacity: 0.82,
     radius: 18,
+    glass: {
+      enabled: true,
+      mode: 'soft',
+      background: '/images/Yakusoku_Together.webp',
+      position: 'center center',
+      blur: 18,
+      saturation: 1.4,
+    },
   },
   navigation: [
     { label: '首页', href: '/' },

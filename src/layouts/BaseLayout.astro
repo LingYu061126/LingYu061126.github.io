@@ -10,7 +10,7 @@ const { title, description = SITE_DESCRIPTION } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE_TITLE}` : `${SITE_TITLE} · ${siteConfig.subtitle}`;
 ---
 <!doctype html>
-<html lang={siteConfig.lang} style={`--hue:${siteConfig.theme.hue};--sat:${siteConfig.theme.saturation}%;--lit:${siteConfig.theme.lightness}%;--card-opacity:${siteConfig.theme.cardOpacity};--radius:${siteConfig.theme.radius}px`}>
+<html lang={siteConfig.lang} data-glass={siteConfig.theme.glass.enabled ? siteConfig.theme.glass.mode : 'off'} style={`--hue:${siteConfig.theme.hue};--sat:${siteConfig.theme.saturation}%;--lit:${siteConfig.theme.lightness}%;--card-opacity:${siteConfig.theme.cardOpacity};--radius:${siteConfig.theme.radius}px;--glass-background:url('${siteConfig.theme.glass.background}');--glass-position:${siteConfig.theme.glass.position};--glass-blur:${siteConfig.theme.glass.blur}px;--glass-saturation:${siteConfig.theme.glass.saturation}`}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -25,6 +25,8 @@ const pageTitle = title ? `${title} · ${SITE_TITLE}` : `${SITE_TITLE} · ${site
       document.documentElement.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       const savedHue = localStorage.getItem('theme-hue');
       if (savedHue) document.documentElement.style.setProperty('--hue', savedHue);
+      const savedGlass = localStorage.getItem('glass-mode');
+      if (savedGlass) document.documentElement.dataset.glass = savedGlass;
     </script>
   </head>
   <body>
@@ -41,6 +43,14 @@ const pageTitle = title ? `${title} · ${SITE_TITLE}` : `${SITE_TITLE} · ${site
             <input id="hue-slider" type="range" min="0" max="360" value={siteConfig.theme.hue} />
             <div class="color-presets" aria-label="主题色预设">
               {[205,250,290,335,20,155].map((hue) => <button type="button" data-hue={hue} style={`--preset-hue:${hue}`} aria-label={`色相 ${hue}`}></button>)}
+            </div>
+            <div class="glass-mode-control">
+              <span>毛玻璃效果</span>
+              <div role="group" aria-label="毛玻璃显示强度">
+                <button type="button" data-glass-mode="off">关闭</button>
+                <button type="button" data-glass-mode="soft">柔和</button>
+                <button type="button" data-glass-mode="clear">通透</button>
+              </div>
             </div>
           </div>
         </div>
@@ -71,6 +81,16 @@ const pageTitle = title ? `${title} · ${SITE_TITLE}` : `${SITE_TITLE} · ${site
       };
       const savedHue = localStorage.getItem('theme-hue');
       if (savedHue) applyHue(savedHue);
+      const applyGlassMode = (mode: string) => {
+        root.dataset.glass = mode;
+        localStorage.setItem('glass-mode', mode);
+        document.querySelectorAll<HTMLButtonElement>('[data-glass-mode]').forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.glassMode === mode);
+          button.setAttribute('aria-pressed', String(button.dataset.glassMode === mode));
+        });
+      };
+      applyGlassMode(localStorage.getItem('glass-mode') ?? root.dataset.glass ?? 'soft');
+      document.querySelectorAll<HTMLButtonElement>('[data-glass-mode]').forEach((button) => button.addEventListener('click', () => applyGlassMode(button.dataset.glassMode ?? 'soft')));
       panelToggle?.addEventListener('click', () => {
         if (!panel) return;
         panel.hidden = !panel.hidden;
