@@ -25,7 +25,7 @@ export const siteConfig = {
     glass: {
       enabled: true,
       mode: 'soft',
-      background: '/images/Yakusoku_Together.webp',
+      background: '/images/card_after_training.png',
       position: 'center center',
       blur: 18,
       saturation: 1.4,
