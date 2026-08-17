@@ -8,7 +8,7 @@ export const siteConfig = {
   startYear: 2025,
   banner: {
     enable: true,
-    image: '/images/lofter_1770820189577.jpg',
+    image: '/images/Abstruse.png',
     position: 'center 43%',
     credit: '',
   },
