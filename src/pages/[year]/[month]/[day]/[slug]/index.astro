@@ -48,7 +48,7 @@ const articlePath = postPath(post);
     <header class="article-head">
       <div class="chips">{post.data.tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>)}</div>
       <h1>{post.data.title}</h1>
-      <p><time datetime={post.data.date.toISOString()}>发布于 {formatDate(post.data.date)}</time>{siteConfig.features.showReadingTime && <> · 约 {Math.max(1, Math.ceil((post.body?.length ?? 0) / 700))} 分钟阅读</>}{siteConfig.features.showVisitorStats && <> · <span id="busuanzi_container_page_pv">阅读 <span id="busuanzi_value_page_pv">--</span></span></>}</p>
+      <p><time datetime={post.data.date.toISOString()}>发布于 {formatDate(post.data.date)}</time>{siteConfig.features.showReadingTime && <> · 约 {Math.max(1, Math.ceil((post.body?.length ?? 0) / 700))} 分钟阅读</>}{siteConfig.features.showVisitorStats && <> · <span id="busuanzi_container_page_pv">阅读 <span id="busuanzi_page_pv">--</span></span></>}</p>
     </header>
     <div class="article-grid">
       <div>
