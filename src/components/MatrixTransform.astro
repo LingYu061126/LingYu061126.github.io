@@ -84,8 +84,9 @@
     const crossLength = (a, b) => Math.hypot(a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]);
     const currentRank = () => {
       const vs = state.values;
-      if (state.dimension === 2) return Math.abs(determinant(vs)) > 0.01 ? 2 : (vs.slice(0, 2).some((v) => vectorLength(v) > 0.01) ? 1 : 0);
-      if (Math.abs(determinant(vs)) > 0.01) return 3;
+      // 滑块步进为 0.1；与界面一位小数的显示保持一致，将接近 0 的值视作 0。
+      if (state.dimension === 2) return Math.abs(determinant(vs)) > 0.05 ? 2 : (vs.slice(0, 2).some((v) => vectorLength(v) > 0.01) ? 1 : 0);
+      if (Math.abs(determinant(vs)) > 0.05) return 3;
       if ([ [vs[0], vs[1]], [vs[0], vs[2]], [vs[1], vs[2]] ].some(([a, b]) => crossLength(a, b) > 0.01)) return 2;
       return vs.slice(0, 3).some((v) => vectorLength(v) > 0.01) ? 1 : 0;
     };
@@ -105,7 +106,7 @@
     const updateRankNote = () => {
       const rank = currentRank();
       const fullRank = state.dimension;
-      if (rank < fullRank) rankNote.textContent = `当前为秩 ${rank}：行列式为 0，线性变换后原来的 ${fullRank} 维空间被压缩到 ${rank} 维子空间。`;
+      if (rank < fullRank) rankNote.textContent = `当前为秩 ${rank}：行列式约为 0，线性变换后原来的 ${fullRank} 维空间被压缩到 ${rank} 维子空间。`;
       else rankNote.textContent = `当前矩阵满秩（秩为 ${fullRank}），空间维度没有被压缩。`;
     };
 
