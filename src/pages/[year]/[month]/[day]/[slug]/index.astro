@@ -4,6 +4,7 @@ import BaseLayout from '../../../../../layouts/BaseLayout.astro';
 import { formatDate } from '../../../../../consts';
 import { siteConfig } from '../../../../../config';
 import WalineComments from '../../../../../components/WalineComments.astro';
+import MatrixTransform from '../../../../../components/MatrixTransform.astro';
 
 function postPath(post: { data: { date: Date; slug: string } }) {
   const [year, month, day] = new Intl.DateTimeFormat('en-CA', {
@@ -52,7 +53,10 @@ const articlePath = postPath(post);
     </header>
     <div class="article-grid">
       <div>
-        <div class="prose" data-pagefind-body><Content /></div>
+        <div class="prose" data-pagefind-body>
+          {post.data.slug === '矩阵与线性变换' && <MatrixTransform />}
+          <Content />
+        </div>
         <section class="article-copyright glass-card" aria-label="文章版权信息">
           <dl>
             <div><dt>作者</dt><dd>{siteConfig.author}</dd></div>

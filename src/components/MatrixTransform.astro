@@ -1,0 +1,192 @@
+<div class="matrix-lab" data-matrix-lab>
+  <div class="matrix-lab-toolbar">
+    <div class="matrix-lab-tabs" role="tablist" aria-label="选择维度">
+      <button type="button" role="tab" aria-selected="true" data-dimension="2">二维</button>
+      <button type="button" role="tab" aria-selected="false" data-dimension="3">三维</button>
+    </div>
+    <button type="button" class="matrix-reset" data-reset>恢复单位矩阵</button>
+  </div>
+
+  <div class="matrix-lab-layout">
+    <div class="matrix-figure">
+      <svg data-plot viewBox="0 0 560 360" role="img" aria-label="线性变换可视化图" preserveAspectRatio="xMidYMid meet"></svg>
+      <p class="matrix-caption" data-caption>矩阵的两列分别告诉我们 e₁、e₂ 变换后要落在哪里。</p>
+      <p class="matrix-rotate-hint" data-rotate-hint hidden>拖动图形可以旋转三维坐标系</p>
+      <div class="matrix-rank-panel">
+        <p data-rank-note>当前矩阵满秩，空间维度没有被压缩。</p>
+        <div class="matrix-rank-actions" data-rank-actions></div>
+      </div>
+    </div>
+    <div class="matrix-controls" data-controls></div>
+  </div>
+</div>
+
+<script is:inline>
+  const labs = document.querySelectorAll('[data-matrix-lab]');
+  labs.forEach((lab) => {
+    const plot = lab.querySelector('[data-plot]');
+    const controls = lab.querySelector('[data-controls]');
+    const caption = lab.querySelector('[data-caption]');
+    const rankNote = lab.querySelector('[data-rank-note]');
+    const rankActions = lab.querySelector('[data-rank-actions]');
+    const state = { dimension: 2, values: [[1, 0, 0], [0, 1, 0], [0, 0, 1]] };
+    const rotation = { x: 0.55, y: -0.65, dragging: false, lastX: 0, lastY: 0 };
+    const labels = ['x', 'y', 'z'];
+    const colors = ['#8b5cf6', '#ec4899', '#14b8a6'];
+
+    const fmt = (value) => Number(value).toFixed(1).replace('.0', '');
+    const set = (dimension) => {
+      state.dimension = dimension;
+      lab.querySelectorAll('[data-dimension]').forEach((button) => {
+        button.setAttribute('aria-selected', String(button.dataset.dimension === String(dimension)));
+      });
+      renderControls();
+      renderPlot();
+      updateRotateHint();
+      renderRankActions();
+    };
+
+    function renderControls() {
+      controls.innerHTML = '';
+      for (let column = 0; column < state.dimension; column += 1) {
+        const group = document.createElement('fieldset');
+        const legend = document.createElement('legend');
+        legend.textContent = `列向量 v${column + 1}`;
+        group.append(legend);
+        for (let row = 0; row < state.dimension; row += 1) {
+          const label = document.createElement('label');
+          const name = document.createElement('span');
+          const output = document.createElement('output');
+          const input = document.createElement('input');
+          name.textContent = labels[row];
+          input.type = 'range';
+          input.min = '-4';
+          input.max = '4';
+          input.step = '0.1';
+          input.value = state.values[column][row];
+          output.textContent = fmt(input.value);
+          input.addEventListener('input', () => {
+            state.values[column][row] = Number(input.value);
+            output.textContent = fmt(input.value);
+            renderPlot();
+          });
+          label.append(name, input, output);
+          group.append(label);
+        }
+        controls.append(group);
+      }
+    }
+
+    const determinant = (vs) => state.dimension === 2
+      ? vs[0][0] * vs[1][1] - vs[1][0] * vs[0][1]
+      : vs[0][0] * (vs[1][1] * vs[2][2] - vs[1][2] * vs[2][1]) - vs[1][0] * (vs[0][1] * vs[2][2] - vs[0][2] * vs[2][1]) + vs[2][0] * (vs[0][1] * vs[1][2] - vs[0][2] * vs[1][1]);
+    const vectorLength = (v) => Math.hypot(...v.slice(0, state.dimension));
+    const crossLength = (a, b) => Math.hypot(a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]);
+    const currentRank = () => {
+      const vs = state.values;
+      if (state.dimension === 2) return Math.abs(determinant(vs)) > 0.01 ? 2 : (vs.slice(0, 2).some((v) => vectorLength(v) > 0.01) ? 1 : 0);
+      if (Math.abs(determinant(vs)) > 0.01) return 3;
+      if ([ [vs[0], vs[1]], [vs[0], vs[2]], [vs[1], vs[2]] ].some(([a, b]) => crossLength(a, b) > 0.01)) return 2;
+      return vs.slice(0, 3).some((v) => vectorLength(v) > 0.01) ? 1 : 0;
+    };
+    const renderRankActions = () => {
+      rankActions.innerHTML = '';
+      const actions = state.dimension === 2 ? [{ label: '切换到秩 1', values: [[1, 0, 0], [1, 0, 0], [0, 0, 1]] }] : [
+        { label: '切换到秩 2', values: [[1, 0, 0], [0, 1, 0], [0, 0, 0]] },
+        { label: '切换到秩 1', values: [[1, 0, 0], [1, 0, 0], [1, 0, 0]] },
+      ];
+      actions.forEach(({ label, values }) => {
+        const button = document.createElement('button');
+        button.type = 'button'; button.textContent = label;
+        button.addEventListener('click', () => { state.values = values.map((v) => [...v]); renderControls(); renderPlot(); });
+        rankActions.append(button);
+      });
+    };
+    const updateRankNote = () => {
+      const rank = currentRank();
+      const fullRank = state.dimension;
+      if (rank < fullRank) rankNote.textContent = `当前为秩 ${rank}：行列式为 0，线性变换后原来的 ${fullRank} 维空间被压缩到 ${rank} 维子空间。`;
+      else rankNote.textContent = `当前矩阵满秩（秩为 ${fullRank}），空间维度没有被压缩。`;
+    };
+
+    const project2d = (x, y) => [280 + x * 48, 180 - y * 48];
+    const project3d = (x, y, z) => {
+      const cosX = Math.cos(rotation.x); const sinX = Math.sin(rotation.x);
+      const cosY = Math.cos(rotation.y); const sinY = Math.sin(rotation.y);
+      const rotatedX = x * cosY - z * sinY;
+      const rotatedZ = x * sinY + z * cosY;
+      const rotatedY = y * cosX - rotatedZ * sinX;
+      const finalZ = y * sinX + rotatedZ * cosX;
+      // 等距投影：x、y 轴向屏幕两侧展开，z 轴保持竖直，避免三维坐标系看起来歪斜。
+      return [280 + (rotatedX - rotatedY) * 44, 202 + (rotatedX + rotatedY) * 24 - finalZ * 48];
+    };
+    const line = (a, b, className, extra = '') => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" class="${className}" ${extra}/>`;
+    const arrow = (end, color, label) => `<line x1="${project3d(0, 0, 0)[0]}" y1="${project3d(0, 0, 0)[1]}" x2="${end[0]}" y2="${end[1]}" class="vector" style="stroke:${color}" marker-end="url(#arrowhead)"/><text x="${end[0] + 8}" y="${end[1] - 8}" class="vector-label" style="fill:${color}">${label}</text>`;
+
+    function renderPlot() {
+      if (state.dimension === 2) {
+        const v1 = state.values[0];
+        const v2 = state.values[1];
+        let html = '<defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="currentColor"/></marker><marker id="axis-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="currentColor"/></marker></defs>';
+        for (let i = -5; i <= 5; i += 1) {
+          html += line(project2d(-5 * v1[0] + i * v2[0], -5 * v1[1] + i * v2[1]), project2d(5 * v1[0] + i * v2[0], 5 * v1[1] + i * v2[1]), 'transformed-grid');
+          html += line(project2d(-5 * v2[0] + i * v1[0], -5 * v2[1] + i * v1[1]), project2d(5 * v2[0] + i * v1[0], 5 * v2[1] + i * v1[1]), 'transformed-grid');
+        }
+        html += line(project2d(-5, 0), project2d(5, 0), 'base-axis', 'marker-end="url(#axis-arrow)"');
+        html += line(project2d(0, -3.5), project2d(0, 3.5), 'base-axis', 'marker-end="url(#axis-arrow)"');
+        html += '<text x="286" y="174" class="axis-label">O</text><text x="516" y="174" class="axis-label">x</text><text x="286" y="20" class="axis-label">y</text>';
+        const origin = project2d(0, 0);
+        const end1 = project2d(v1[0], v1[1]);
+        const end2 = project2d(v2[0], v2[1]);
+        html += `<line x1="${origin[0]}" y1="${origin[1]}" x2="${end1[0]}" y2="${end1[1]}" class="vector" style="stroke:${colors[0]}" marker-end="url(#arrowhead)"/><line x1="${origin[0]}" y1="${origin[1]}" x2="${end2[0]}" y2="${end2[1]}" class="vector" style="stroke:${colors[1]}" marker-end="url(#arrowhead)"/>`;
+        html += `<text x="${end1[0] + 8}" y="${end1[1] - 8}" class="vector-label" style="fill:${colors[0]}">v₁</text><text x="${end2[0] + 8}" y="${end2[1] - 8}" class="vector-label" style="fill:${colors[1]}">v₂</text>`;
+        plot.innerHTML = html;
+        caption.textContent = `A = [ v₁  v₂ ] = [ ${fmt(v1[0])}  ${fmt(v2[0])} ; ${fmt(v1[1])}  ${fmt(v2[1])} ] · det(A) = ${fmt(v1[0] * v2[1] - v2[0] * v1[1])}`;
+      } else {
+        const vs = state.values;
+        let html = '<defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="currentColor"/></marker><marker id="axis-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="currentColor"/></marker></defs>';
+        const cube = [[0,0,0],[1,0,0],[0,1,0],[0,0,1],[1,1,0],[1,0,1],[0,1,1],[1,1,1]];
+        const edges = [[0,1],[0,2],[0,3],[1,4],[1,5],[2,4],[2,6],[3,5],[3,6],[4,7],[5,7],[6,7]];
+        edges.forEach(([a, b]) => { const pa = cube[a].map((_, i) => vs[0][i] * cube[a][0] + vs[1][i] * cube[a][1] + vs[2][i] * cube[a][2]); const pb = cube[b].map((_, i) => vs[0][i] * cube[b][0] + vs[1][i] * cube[b][1] + vs[2][i] * cube[b][2]); html += line(project3d(...pa), project3d(...pb), 'transformed-grid'); });
+        html += line(project3d(-2.8,0,0), project3d(2.8,0,0), 'base-axis', 'marker-end="url(#axis-arrow)"');
+        html += line(project3d(0,-2.8,0), project3d(0,2.8,0), 'base-axis', 'marker-end="url(#axis-arrow)"');
+        html += line(project3d(0,0,-2.8), project3d(0,0,2.8), 'base-axis', 'marker-end="url(#axis-arrow)"');
+        const origin = project3d(0, 0, 0);
+        html += `<text x="${origin[0] + 7}" y="${origin[1] + 17}" class="axis-label">O</text>`;
+        const axisX = project3d(2.8, 0, 0); const axisY = project3d(0, 2.8, 0); const axisZ = project3d(0, 0, 2.8);
+        html += `<text x="${axisX[0] + 8}" y="${axisX[1] - 5}" class="axis-label">x</text><text x="${axisY[0] - 18}" y="${axisY[1] - 6}" class="axis-label">y</text><text x="${axisZ[0] + 8}" y="${axisZ[1] - 6}" class="axis-label">z</text>`;
+        vs.forEach((v, i) => html += arrow(project3d(...v), colors[i], `v${i + 1}`));
+        plot.innerHTML = html;
+        const det = vs[0][0] * (vs[1][1] * vs[2][2] - vs[1][2] * vs[2][1]) - vs[1][0] * (vs[0][1] * vs[2][2] - vs[0][2] * vs[2][1]) + vs[2][0] * (vs[0][1] * vs[1][2] - vs[0][2] * vs[1][1]);
+        caption.textContent = `A = [ v₁  v₂  v₃ ] · det(A) = ${fmt(det)}；立方体体积会按 |det(A)| 倍缩放。`;
+      }
+      updateRankNote();
+    }
+
+    lab.querySelectorAll('[data-dimension]').forEach((button) => button.addEventListener('click', () => set(Number(button.dataset.dimension))));
+    lab.querySelector('[data-reset]').addEventListener('click', () => { state.values = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]; renderControls(); renderPlot(); });
+    const rotateHint = lab.querySelector('[data-rotate-hint]');
+    const updateRotateHint = () => { rotateHint.hidden = state.dimension !== 3; plot.style.cursor = state.dimension === 3 ? (rotation.dragging ? 'grabbing' : 'grab') : 'default'; };
+    plot.addEventListener('pointerdown', (event) => {
+      if (state.dimension !== 3) return;
+      rotation.dragging = true; rotation.lastX = event.clientX; rotation.lastY = event.clientY;
+      plot.setPointerCapture(event.pointerId); updateRotateHint();
+    });
+    plot.addEventListener('pointermove', (event) => {
+      if (!rotation.dragging) return;
+      rotation.y += (event.clientX - rotation.lastX) * 0.012;
+      rotation.x += (event.clientY - rotation.lastY) * 0.012;
+      rotation.x = Math.max(-1.45, Math.min(1.45, rotation.x));
+      rotation.lastX = event.clientX; rotation.lastY = event.clientY;
+      renderPlot();
+    });
+    const stopDragging = (event) => { if (!rotation.dragging) return; rotation.dragging = false; plot.releasePointerCapture?.(event.pointerId); updateRotateHint(); };
+    plot.addEventListener('pointerup', stopDragging);
+    plot.addEventListener('pointercancel', stopDragging);
+    plot.addEventListener('pointerleave', (event) => { if (rotation.dragging && !plot.hasPointerCapture?.(event.pointerId)) stopDragging(event); });
+    updateRotateHint();
+    renderRankActions();
+    renderControls();
+    renderPlot();
+  });
+</script>
