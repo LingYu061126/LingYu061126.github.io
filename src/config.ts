@@ -49,7 +49,7 @@ export const siteConfig = {
     {
      name: '我们的好医生',
      url: 'https://astepluver.github.io/',
-     //avatar: 'https://example.com/avatar.png',
+     avatar: '/images/医生.jpeg',
      description: '一些学习动态和文献笔记',
    },
   ] as Array<{ name: string; url: string; avatar: string; description: string }>,
