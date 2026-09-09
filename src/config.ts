@@ -46,14 +46,14 @@ export const siteConfig = {
   ],
   friends: [
     // 示例：取消下面几行的注释，并替换为真实信息即可添加友链。
-    // {
-    //   name: '朋友的博客',
-    //   url: 'https://example.com',
-    //   avatar: 'https://example.com/avatar.png',
-    //   description: '一句简短的介绍',
-    // },
+    {
+     name: '我们的好医生',
+     url: 'https://astepluver.github.io/',
+     //avatar: 'https://example.com/avatar.png',
+     description: '一些学习动态和文献笔记',
+   },
   ] as Array<{ name: string; url: string; avatar: string; description: string }>,
-  waline: {
+  waline: {句简短的介绍
     serverURL: 'https://valproate-waline.vercel.app',
     lang: 'zh-CN',
     login: 'enable',
