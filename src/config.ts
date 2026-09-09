@@ -53,7 +53,8 @@ export const siteConfig = {
      description: '一些学习动态和文献笔记',
    },
   ] as Array<{ name: string; url: string; avatar: string; description: string }>,
-  waline: {句简短的介绍
+  waline: {
+    // 句简短的介绍
     serverURL: 'https://valproate-waline.vercel.app',
     lang: 'zh-CN',
     login: 'enable',
