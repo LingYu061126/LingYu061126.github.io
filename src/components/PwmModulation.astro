@@ -1,0 +1,134 @@
+<div class="pwm-lab" data-pwm-lab>
+  <div class="pwm-head">
+    <div>
+      <span class="pwm-kicker">INTERACTIVE LAB</span>
+      <h2>正弦脉宽调制 · SPWM</h2>
+      <p>比较器在 <strong>调制波 ≥ 载波</strong> 时输出高电平。</p>
+    </div>
+    <button type="button" class="pwm-play" data-play aria-label="暂停动画">暂停</button>
+  </div>
+
+  <div class="pwm-stage">
+    <svg data-chart viewBox="0 0 760 390" role="img" aria-label="正弦调制波与三角载波比较形成 PWM 波的动画"></svg>
+    <div class="pwm-legend" aria-hidden="true">
+      <span><i class="reference"></i>调制波 u<sub>r</sub></span>
+      <span><i class="carrier"></i>三角载波 u<sub>c</sub></span>
+      <span><i class="pulse"></i>PWM 输出</span>
+    </div>
+  </div>
+
+  <div class="pwm-controls">
+    <label>
+      <span>调制度 M<sub>a</sub> <output data-amplitude>0.80</output></span>
+      <input data-amplitude-input type="range" min="0.1" max="1.2" step="0.05" value="0.8" />
+    </label>
+    <label>
+      <span>载波比 M<sub>f</sub> <output data-frequency>9</output></span>
+      <input data-frequency-input type="range" min="3" max="21" step="2" value="9" />
+    </label>
+    <div class="pwm-readout">
+      <span>光标处比较结果</span>
+      <strong data-state>u<sub>r</sub> ≥ u<sub>c</sub>，开关导通</strong>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('[data-pwm-lab]').forEach((lab) => {
+    const chart = lab.querySelector('[data-chart]');
+    const play = lab.querySelector('[data-play]');
+    const amplitudeInput = lab.querySelector('[data-amplitude-input]');
+    const frequencyInput = lab.querySelector('[data-frequency-input]');
+    const amplitudeOutput = lab.querySelector('[data-amplitude]');
+    const frequencyOutput = lab.querySelector('[data-frequency]');
+    const stateOutput = lab.querySelector('[data-state]');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let running = !reduceMotion;
+    let phase = 0.08;
+    let lastTime = performance.now();
+    let frame;
+
+    const left = 54, right = 738, topMid = 133, bottomHigh = 256, bottomLow = 342;
+    const width = right - left;
+    const triangle = (turns) => 1 - 4 * Math.abs((((turns + .25) % 1) + 1) % 1 - .5);
+    const xAt = (t) => left + t * width;
+    const reference = (t, amplitude) => amplitude * Math.sin(t * Math.PI * 2);
+    const carrier = (t, ratio) => triangle(t * ratio);
+    const yAt = (value) => topMid - value * 82;
+    const pathFor = (fn, steps = 420) => Array.from({ length: steps + 1 }, (_, i) => {
+      const t = i / steps;
+      return `${i ? 'L' : 'M'}${xAt(t).toFixed(1)},${fn(t).toFixed(1)}`;
+    }).join(' ');
+
+    function draw() {
+      const amplitude = Number(amplitudeInput.value);
+      const ratio = Number(frequencyInput.value);
+      const referencePath = pathFor((t) => yAt(reference(t, amplitude)));
+      const carrierPath = pathFor((t) => yAt(carrier(t, ratio)));
+      let pwmPath = `M${left},${bottomLow}`;
+      let previousHigh = reference(0, amplitude) >= carrier(0, ratio);
+      pwmPath += `L${left},${previousHigh ? bottomHigh : bottomLow}`;
+      for (let i = 1; i <= 700; i += 1) {
+        const t = i / 700;
+        const high = reference(t, amplitude) >= carrier(t, ratio);
+        const x = xAt(t).toFixed(1);
+        if (high !== previousHigh) pwmPath += `L${x},${previousHigh ? bottomHigh : bottomLow}L${x},${high ? bottomHigh : bottomLow}`;
+        else pwmPath += `L${x},${high ? bottomHigh : bottomLow}`;
+        previousHigh = high;
+      }
+      const cursorT = phase % 1;
+      const cursorX = xAt(cursorT);
+      const refValue = reference(cursorT, amplitude);
+      const carrierValue = carrier(cursorT, ratio);
+      const isHigh = refValue >= carrierValue;
+      stateOutput.innerHTML = isHigh ? 'u<sub>r</sub> ≥ u<sub>c</sub>，开关导通' : 'u<sub>r</sub> &lt; u<sub>c</sub>，开关关断';
+      stateOutput.dataset.high = String(isHigh);
+      chart.innerHTML = `
+        <defs><linearGradient id="pwm-fill" x1="0" y1="0" x2="1" y2="0"><stop stop-color="var(--primary)" stop-opacity=".16"/><stop offset="1" stop-color="#22d3ee" stop-opacity=".04"/></linearGradient></defs>
+        <rect x="${left}" y="38" width="${width}" height="190" rx="12" class="plot-bg"/>
+        <rect x="${left}" y="244" width="${width}" height="112" rx="12" class="plot-bg"/>
+        <path d="M${left},${topMid}H${right}" class="zero-line"/><path d="M${left},${bottomHigh}H${right}M${left},${bottomLow}H${right}" class="level-line"/>
+        <text x="16" y="${topMid + 4}" class="axis-text">0</text><text x="15" y="${bottomHigh + 4}" class="axis-text">1</text><text x="15" y="${bottomLow + 4}" class="axis-text">0</text>
+        <text x="${left}" y="25" class="panel-title">① 比较调制波与载波</text><text x="${left}" y="378" class="panel-title">② 得到开关脉冲</text>
+        <path d="${referencePath}L${right},${topMid}L${left},${topMid}Z" class="reference-fill"/><path d="${carrierPath}" class="carrier-path"/><path d="${referencePath}" class="reference-path"/>
+        <path d="${pwmPath}" class="pulse-path"/>
+        <path d="M${cursorX},38V356" class="scan-line"/>
+        <circle cx="${cursorX}" cy="${yAt(refValue)}" r="5" class="reference-dot"/><circle cx="${cursorX}" cy="${yAt(carrierValue)}" r="5" class="carrier-dot"/>
+        <circle cx="${cursorX}" cy="${isHigh ? bottomHigh : bottomLow}" r="6" class="pulse-dot"/>
+      `;
+    }
+
+    function animate(now) {
+      const delta = Math.min(50, now - lastTime);
+      lastTime = now;
+      if (running) phase = (phase + delta / 7000) % 1;
+      draw();
+      frame = requestAnimationFrame(animate);
+    }
+    function syncControl() {
+      amplitudeOutput.textContent = Number(amplitudeInput.value).toFixed(2);
+      frequencyOutput.textContent = frequencyInput.value;
+      draw();
+    }
+    amplitudeInput.addEventListener('input', syncControl);
+    frequencyInput.addEventListener('input', syncControl);
+    play.addEventListener('click', () => {
+      running = !running;
+      play.textContent = running ? '暂停' : '播放';
+      play.setAttribute('aria-label', running ? '暂停动画' : '播放动画');
+    });
+    if (reduceMotion) play.textContent = '播放';
+    draw();
+    frame = requestAnimationFrame(animate);
+    document.addEventListener('astro:before-swap', () => cancelAnimationFrame(frame), { once: true });
+  });
+</script>
+
+<style>
+  .pwm-lab{margin:2rem 0;padding:clamp(1rem,3vw,1.5rem);border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,var(--glass-card-bg),var(--primary-soft));font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Noto Sans SC",sans-serif;box-shadow:0 18px 55px rgba(0,0,0,.08)}
+  .pwm-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:1rem}.pwm-head h2{margin:.12rem 0 .25rem!important;padding:0!important;border:0!important;font-size:1.35rem}.pwm-head p{margin:0;color:var(--muted);font-size:.82rem}.pwm-kicker{color:var(--primary);font-size:.65rem;font-weight:800;letter-spacing:.16em}.pwm-play{flex:none;border:1px solid var(--primary);border-radius:999px;padding:.45rem .9rem;background:var(--primary);color:#fff;cursor:pointer}.pwm-play:hover{filter:brightness(1.08)}
+  .pwm-stage{padding:.5rem;border:1px solid var(--line);border-radius:14px;background:var(--surface)}.pwm-stage svg{display:block;width:100%;height:auto;overflow:visible}.pwm-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;padding:.25rem 0 .5rem;color:var(--muted);font-size:.73rem}.pwm-legend span{display:flex;align-items:center;gap:.35rem}.pwm-legend i{width:18px;height:3px;border-radius:9px}.pwm-legend .reference{background:#f97316}.pwm-legend .carrier{background:#22d3ee}.pwm-legend .pulse{background:var(--primary)}
+  .pwm-controls{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:.8rem;margin-top:1rem}.pwm-controls label,.pwm-readout{padding:.75rem .85rem;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.pwm-controls label>span{display:flex;justify-content:space-between;color:var(--muted);font-size:.76rem}.pwm-controls output{color:var(--text);font-weight:800;font-variant-numeric:tabular-nums}.pwm-controls input{width:100%;margin-top:.55rem;accent-color:var(--primary)}.pwm-readout{display:grid;align-content:center}.pwm-readout span{color:var(--muted);font-size:.7rem}.pwm-readout strong{margin-top:.2rem;color:#22a06b;font-size:.8rem}.pwm-readout strong[data-high="false"]{color:#f97316}
+  .pwm-stage :global(.plot-bg){fill:var(--primary-soft);stroke:var(--line)}.pwm-stage :global(.zero-line),.pwm-stage :global(.level-line){stroke:var(--muted);stroke-width:1;stroke-dasharray:4 6;opacity:.55}.pwm-stage :global(.axis-text),.pwm-stage :global(.panel-title){fill:var(--muted);font:12px Inter,system-ui,sans-serif}.pwm-stage :global(.panel-title){font-weight:700;letter-spacing:.03em}.pwm-stage :global(.reference-fill){fill:url(#pwm-fill)}.pwm-stage :global(.reference-path){fill:none;stroke:#f97316;stroke-width:3}.pwm-stage :global(.carrier-path){fill:none;stroke:#22b8d6;stroke-width:2}.pwm-stage :global(.pulse-path){fill:none;stroke:var(--primary);stroke-width:4;stroke-linejoin:round}.pwm-stage :global(.scan-line){stroke:var(--text);stroke-width:1;stroke-dasharray:3 4;opacity:.55}.pwm-stage :global(.reference-dot){fill:#f97316}.pwm-stage :global(.carrier-dot){fill:#22b8d6}.pwm-stage :global(.pulse-dot){fill:var(--primary);stroke:var(--surface);stroke-width:3}
+  @media(max-width:700px){.pwm-controls{grid-template-columns:1fr 1fr}.pwm-readout{grid-column:1/-1}}@media(max-width:520px){.pwm-head{align-items:flex-end}.pwm-head p{display:none}.pwm-controls{grid-template-columns:1fr}.pwm-readout{grid-column:auto}.pwm-stage{overflow-x:auto}.pwm-stage svg{min-width:570px}}
+</style>
