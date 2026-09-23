@@ -1,0 +1,271 @@
+---
+const instanceId = `pfr-${crypto.randomUUID()}`;
+---
+<section class="pfr" data-pfr aria-labelledby={`${instanceId}-title`}>
+  <header class="pfr__header">
+    <div>
+      <span class="pfr__kicker">INTERACTIVE EXPLAINER · 一次调频</span>
+      <h2 id={`${instanceId}-title`}>同一频差，两种响应相加</h2>
+      <p>观察发电机增发与原有负荷减小，如何共同平衡新增负荷。</p>
+    </div>
+    <div class="pfr__result" aria-label="系统频率调整系数">
+      <span>系统调整系数</span><strong>K<sub>S</sub> = <output data-ks>3.20</output></strong>
+    </div>
+  </header>
+
+  <div class="pfr__stage">
+    <svg data-diagram viewBox="0 0 820 500" role="img" aria-labelledby={`${instanceId}-svg-title ${instanceId}-svg-desc`}>
+      <title id={`${instanceId}-svg-title`}>发电机与负荷的频率特性及功率响应合成动画</title>
+      <desc id={`${instanceId}-svg-desc`}>横轴为频率，纵轴为有功功率。发电机特性为负斜率，负荷特性为正斜率。频率由 f0 降至 f1 时，发电机出力增加，原有负荷功率下降，两者的正响应量相加等于新增负荷。</desc>
+      <defs>
+        <marker id={`${instanceId}-arrow-positive`} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" class="pfr__marker-positive" /></marker>
+        <marker id={`${instanceId}-arrow-load`} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" class="pfr__marker-load" /></marker>
+        <marker id={`${instanceId}-arrow-axis`} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" class="pfr__marker-axis" /></marker>
+      </defs>
+
+      <rect x="54" y="30" width="594" height="404" rx="14" class="pfr__plot-bg" />
+      <path d="M76 410H636M76 410V48" class="pfr__axis" marker-end={`url(#${instanceId}-arrow-axis)`} />
+      <text x="642" y="416" class="pfr__axis-label">频率 f</text>
+      <text x="64" y="42" class="pfr__axis-label">有功功率 P</text>
+      <path data-gen-line class="pfr__curve pfr__curve--gen" />
+      <path data-load-line class="pfr__curve pfr__curve--load" />
+      <text data-gen-label class="pfr__curve-label pfr__curve-label--gen">发电机：dP<tspan baseline-shift="sub">G</tspan>/df = −K<tspan baseline-shift="sub">G</tspan></text>
+      <text data-load-label class="pfr__curve-label pfr__curve-label--load">负荷：dP<tspan baseline-shift="sub">L</tspan>/df = K<tspan baseline-shift="sub">L</tspan></text>
+
+      <g class="pfr__freq-guides">
+        <path data-f0-guide class="pfr__guide pfr__guide--f0" />
+        <path data-f1-guide class="pfr__guide pfr__guide--f1" />
+        <text data-f0-label y="454" class="pfr__tick">f₀ = 50.00 Hz</text>
+        <text data-f1-label y="476" class="pfr__tick pfr__tick--accent">f₁</text>
+        <path data-df-arrow class="pfr__df-arrow" marker-end={`url(#${instanceId}-arrow-axis)`} />
+        <text data-df-label y="441" class="pfr__delta-label">−Δf = f₀ − f₁</text>
+      </g>
+
+      <g class="pfr__initial-points">
+        <circle data-g0 r="6" class="pfr__dot pfr__dot--initial" />
+        <circle data-l0 r="6" class="pfr__dot pfr__dot--initial" />
+      </g>
+      <g class="pfr__generator-response">
+        <path data-gen-base class="pfr__response-guide" />
+        <circle data-g1 r="7" class="pfr__dot pfr__dot--gen" />
+        <path data-dpg-arrow class="pfr__power-arrow pfr__power-arrow--gen" marker-end={`url(#${instanceId}-arrow-positive)`} />
+        <text data-dpg-label class="pfr__power-label pfr__power-label--gen">ΔP<tspan baseline-shift="sub">G</tspan> &gt; 0</text>
+      </g>
+      <g class="pfr__load-response">
+        <path data-load-base class="pfr__response-guide" />
+        <circle data-l1 r="7" class="pfr__dot pfr__dot--load" />
+        <path data-dpl-arrow class="pfr__power-arrow pfr__power-arrow--load" marker-end={`url(#${instanceId}-arrow-load)`} />
+        <text data-dpl-label class="pfr__power-label pfr__power-label--load">−ΔP<tspan baseline-shift="sub">L</tspan> &gt; 0</text>
+      </g>
+
+      <g class="pfr__disturbance">
+        <rect x="665" y="50" width="130" height="54" rx="12" />
+        <text x="730" y="72">负荷突然增加</text><text x="730" y="93" class="pfr__disturbance-value">+ΔP<tspan baseline-shift="sub">D</tspan></text>
+      </g>
+      <g class="pfr__composition">
+        <text x="714" y="144" class="pfr__composition-title">几何合成</text>
+        <path data-comp-gen pathLength="1" class="pfr__comp-segment pfr__comp-segment--gen" />
+        <path data-comp-load pathLength="1" class="pfr__comp-segment pfr__comp-segment--load" />
+        <path data-comp-total pathLength="1" class="pfr__comp-total" />
+        <text data-comp-gen-label x="724" class="pfr__comp-label pfr__comp-label--gen">ΔP<tspan baseline-shift="sub">G</tspan></text>
+        <text data-comp-load-label x="724" class="pfr__comp-label pfr__comp-label--load">−ΔP<tspan baseline-shift="sub">L</tspan></text>
+        <text data-comp-total-label x="658" class="pfr__comp-label pfr__comp-label--total">ΔP<tspan baseline-shift="sub">D</tspan></text>
+      </g>
+    </svg>
+
+    <div class="pfr__narration" aria-live="polite">
+      <span data-step-number>01 / 06</span>
+      <div><strong data-step-title>初始状态</strong><p data-step-copy>系统最初运行在额定频率 f₀。</p></div>
+      <div class="pfr__equation" data-equation>f = f₀</div>
+    </div>
+    <div class="pfr__steps" role="progressbar" aria-label="教学动画进度" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1">
+      {['初始', '扰动', '发电机', '负荷', '合成', '结论'].map((label, index) => <span data-step-dot={index} title={label}><i></i><b>{label}</b></span>)}
+    </div>
+  </div>
+
+  <div class="pfr__controls">
+    <div class="pfr__transport" role="group" aria-label="动画播放控制">
+      <button type="button" data-play aria-label="暂停教学动画">暂停</button>
+      <button type="button" data-replay aria-label="从头重新播放教学动画">↻ 重播</button>
+      <button type="button" data-next aria-label="前往教学动画下一步">下一步 →</button>
+    </div>
+    <div class="pfr__sliders">
+      <label><span>频率变化 Δf <output data-df-output>−0.20 Hz</output></span><input data-df type="range" min="-0.50" max="0" step="0.01" value="-0.20" aria-label="频率变化 Δf" /></label>
+      <label><span>发电机系数 K<sub>G</sub> <output data-kg-output>2.40</output></span><input data-kg type="range" min="0.6" max="4" step="0.1" value="2.4" aria-label="发电机频率调整系数 KG" /></label>
+      <label><span>负荷系数 K<sub>L</sub> <output data-kl-output>0.80</output></span><input data-kl type="range" min="0.2" max="2" step="0.1" value="0.8" aria-label="负荷频率调整系数 KL" /></label>
+    </div>
+    <div class="pfr__readouts" aria-label="当前计算结果">
+      <span>f₁ <strong data-f1-output>49.80 Hz</strong></span>
+      <span>ΔP<sub>G</sub> <strong data-dpg-output>+0.48</strong></span>
+      <span>ΔP<sub>L</sub> <strong data-dpl-output>−0.16</strong></span>
+      <span>ΔP<sub>D</sub> <strong data-dpd-output>+0.64</strong></span>
+    </div>
+  </div>
+
+  <div class="pfr__derivation" data-derivation aria-hidden="true">
+    <span>ΔP<sub>D</sub> = ΔP<sub>G</sub> − ΔP<sub>L</sub></span>
+    <span>= (−K<sub>G</sub>Δf) − (K<sub>L</sub>Δf)</span>
+    <strong>= −(K<sub>G</sub> + K<sub>L</sub>)Δf</strong>
+  </div>
+  <div class="pfr__conclusion" data-conclusion aria-hidden="true">
+    <div>K<sub>S</sub> = −<span class="pfr__fraction"><span>ΔP<sub>D</sub></span><span>Δf</span></span> = K<sub>G</sub> + K<sub>L</sub></div>
+    <p>同一个频率偏差同时引起发电机增发和负荷减小，因此两种频率调节效应相加。</p>
+  </div>
+</section>
+
+<script>
+  const PFR_STAGES = [
+    { title: '初始状态', copy: '系统最初运行在额定频率 f₀。', equation: 'f = f₀', duration: 1400 },
+    { title: '负荷突然增加', copy: '新增有功负荷使频率由 f₀ 下降到 f₁；一次调频后仍保留稳态频差。', equation: 'Δf = f₁ − f₀ < 0', duration: 1600 },
+    { title: '发电机响应', copy: '频率下降 → 调速器增加机械功率 → 发电机有功出力增加。', equation: 'ΔP_G = −K_G Δf > 0', duration: 1600 },
+    { title: '负荷响应', copy: '频率下降 → 部分原有负荷消耗的有功功率下降。', equation: 'ΔP_L = K_L Δf < 0；−ΔP_L > 0', duration: 1600 },
+    { title: '几何合成', copy: '把发电机增发与负荷减少的正贡献首尾相接，得到新增负荷。', equation: 'ΔP_D = ΔP_G + (−ΔP_L)', duration: 2200 },
+    { title: '结论', copy: '两种频率调节效应相加，共同形成系统频率调整系数。', equation: 'K_S = −ΔP_D / Δf = K_G + K_L', duration: 1800 },
+  ];
+
+  const pfrCleanups = new WeakMap<Element, () => void>();
+
+  function initPowerFrequencyRegulation(root: HTMLElement) {
+    pfrCleanups.get(root)?.();
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const q = <T extends Element>(selector: string) => root.querySelector<T>(selector)!;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const f0 = 50;
+    const plot = { left: 76, right: 636, top: 48, bottom: 410 };
+    const fMin = 49.4, fMax = 50.15;
+    const xFor = (frequency: number) => plot.left + ((frequency - fMin) / (fMax - fMin)) * (plot.right - plot.left);
+    const pixelsPerPower = 80;
+    const genBase = 228, loadBase = 316;
+    const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+    const setAttrs = (element: Element, attrs: Record<string, string | number>) => Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, String(value)));
+    const formatSigned = (value: number, digits = 2) => `${value >= 0 ? '+' : '−'}${Math.abs(value).toFixed(digits)}`;
+    let stage = 0;
+    let stageStarted = performance.now();
+    let playing = !reducedMotion;
+    let frame = 0;
+
+    function values() {
+      const df = Number(q<HTMLInputElement>('[data-df]').value);
+      const kg = Number(q<HTMLInputElement>('[data-kg]').value);
+      const kl = Number(q<HTMLInputElement>('[data-kl]').value);
+      return { df, kg, kl, f1: f0 + df, dpg: -kg * df, dpl: kl * df, dpd: -(kg + kl) * df };
+    }
+
+    function draw(localProgress = 1) {
+      const { df, kg, kl, f1, dpg, dpl, dpd } = values();
+      const x0 = xFor(f0), x1 = xFor(f1);
+      const responseScale = pixelsPerPower;
+      const yG0 = genBase, yG1 = yG0 - dpg * responseScale;
+      const yL0 = loadBase, yL1 = yL0 + (-dpl) * responseScale;
+      const pixelsPerHz = (plot.right - plot.left) / (fMax - fMin);
+      const genSlope = kg * pixelsPerPower / pixelsPerHz;
+      const loadSlope = kl * pixelsPerPower / pixelsPerHz;
+      const lineY = (base: number, slope: number, x: number) => base + slope * (x - x0);
+      const guideX = stage === 1 ? x0 + (x1 - x0) * localProgress : stage > 1 ? x1 : x0;
+
+      setAttrs(q('[data-gen-line]'), { d: `M${plot.left} ${lineY(yG0, genSlope, plot.left)}L${plot.right} ${lineY(yG0, genSlope, plot.right)}` });
+      setAttrs(q('[data-load-line]'), { d: `M${plot.left} ${lineY(yL0, -loadSlope, plot.left)}L${plot.right} ${lineY(yL0, -loadSlope, plot.right)}` });
+      setAttrs(q('[data-gen-label]'), { x: 104, y: lineY(yG0, genSlope, 104) - 12 });
+      setAttrs(q('[data-load-label]'), { x: 104, y: lineY(yL0, -loadSlope, 104) + 25 });
+      setAttrs(q('[data-f0-guide]'), { d: `M${x0} 70V${plot.bottom}` });
+      setAttrs(q('[data-f1-guide]'), { d: `M${guideX} 70V${plot.bottom}` });
+      setAttrs(q('[data-f0-label]'), { x: x0 - 41 });
+      setAttrs(q('[data-f1-label]'), { x: x1 - 40 });
+      q('[data-f1-label]').textContent = `f₁ = ${f1.toFixed(2)} Hz`;
+      setAttrs(q('[data-df-arrow]'), { d: `M${x0 - 4} 425H${x1 + 5}` });
+      setAttrs(q('[data-df-label]'), { x: (x0 + x1) / 2 - 47 });
+      setAttrs(q('[data-gen-base]'), { d: `M${x1} ${yG0}H${x0}` });
+      setAttrs(q('[data-load-base]'), { d: `M${x1} ${yL0}H${x0}` });
+      setAttrs(q('[data-g0]'), { cx: x0, cy: yG0 }); setAttrs(q('[data-l0]'), { cx: x0, cy: yL0 });
+      setAttrs(q('[data-g1]'), { cx: x1, cy: yG1 }); setAttrs(q('[data-l1]'), { cx: x1, cy: yL1 });
+      setAttrs(q('[data-dpg-arrow]'), { d: `M${x1 - 13} ${yG0 - 2}V${yG1 + 6}` });
+      setAttrs(q('[data-dpl-arrow]'), { d: `M${x1 + 13} ${yL0 + 2}V${yL1 - 6}` });
+      setAttrs(q('[data-dpg-label]'), { x: x1 - 86, y: (yG0 + yG1) / 2 });
+      setAttrs(q('[data-dpl-label]'), { x: x1 + 21, y: (yL0 + yL1) / 2 });
+
+      const compBottom = 402, compX = 704;
+      const genLength = dpg * responseScale, loadLength = (-dpl) * responseScale;
+      setAttrs(q('[data-comp-gen]'), { d: `M${compX} ${compBottom}V${compBottom - genLength}` });
+      setAttrs(q('[data-comp-load]'), { d: `M${compX} ${compBottom - genLength}V${compBottom - genLength - loadLength}` });
+      setAttrs(q('[data-comp-total]'), { d: `M${compX - 17} ${compBottom}V${compBottom - genLength - loadLength}` });
+      setAttrs(q('[data-comp-gen-label]'), { y: compBottom - genLength / 2 + 4 });
+      setAttrs(q('[data-comp-load-label]'), { y: compBottom - genLength - loadLength / 2 + 4 });
+      setAttrs(q('[data-comp-total-label]'), { y: compBottom - (genLength + loadLength) / 2 + 4 });
+
+      q<HTMLOutputElement>('[data-df-output]').value = `${formatSigned(df)} Hz`;
+      q<HTMLOutputElement>('[data-kg-output]').value = kg.toFixed(2);
+      q<HTMLOutputElement>('[data-kl-output]').value = kl.toFixed(2);
+      q<HTMLOutputElement>('[data-ks]').value = (kg + kl).toFixed(2);
+      q('[data-f1-output]').textContent = `${f1.toFixed(2)} Hz`;
+      q('[data-dpg-output]').textContent = formatSigned(dpg);
+      q('[data-dpl-output]').textContent = formatSigned(dpl);
+      q('[data-dpd-output]').textContent = formatSigned(dpd);
+    }
+
+    function renderStage(localProgress = 1) {
+      root.dataset.stage = String(stage);
+      q('[data-step-number]').textContent = `${String(stage + 1).padStart(2, '0')} / 06`;
+      q('[data-step-title]').textContent = PFR_STAGES[stage].title;
+      q('[data-step-copy]').textContent = PFR_STAGES[stage].copy;
+      q('[data-equation]').textContent = PFR_STAGES[stage].equation;
+      q<HTMLElement>('.pfr__steps').setAttribute('aria-valuenow', String(stage + 1));
+      root.querySelectorAll<HTMLElement>('[data-step-dot]').forEach((dot, index) => dot.dataset.active = String(index <= stage));
+      q('[data-derivation]').setAttribute('aria-hidden', String(stage < 4));
+      q('[data-conclusion]').setAttribute('aria-hidden', String(stage < 5));
+      draw(localProgress);
+    }
+
+    function updateTransport() {
+      const button = q<HTMLButtonElement>('[data-play]');
+      button.textContent = playing ? '暂停' : '播放';
+      button.setAttribute('aria-label', playing ? '暂停教学动画' : '播放教学动画');
+    }
+
+    function tick(now: number) {
+      const elapsed = now - stageStarted;
+      const duration = PFR_STAGES[stage].duration;
+      const localProgress = clamp(elapsed / duration);
+      if (playing && elapsed >= duration) {
+        stage = (stage + 1) % PFR_STAGES.length;
+        stageStarted = now;
+        renderStage(0);
+      } else if (playing && stage === 1) {
+        draw(localProgress);
+      }
+      frame = requestAnimationFrame(tick);
+    }
+
+    q('[data-play]').addEventListener('click', () => { playing = !playing; stageStarted = performance.now(); updateTransport(); }, { signal });
+    q('[data-replay]').addEventListener('click', () => { stage = 0; playing = !reducedMotion; stageStarted = performance.now(); renderStage(0); updateTransport(); }, { signal });
+    q('[data-next]').addEventListener('click', () => { stage = (stage + 1) % PFR_STAGES.length; playing = false; stageStarted = performance.now(); renderStage(1); updateTransport(); }, { signal });
+    root.querySelectorAll<HTMLInputElement>('input[type="range"]').forEach((input) => input.addEventListener('input', () => draw(1), { signal }));
+
+    renderStage(1);
+    updateTransport();
+    frame = requestAnimationFrame(tick);
+    const cleanup = () => { controller.abort(); cancelAnimationFrame(frame); pfrCleanups.delete(root); };
+    pfrCleanups.set(root, cleanup);
+  }
+
+  function initAllPfr() {
+    document.querySelectorAll<HTMLElement>('[data-pfr]').forEach(initPowerFrequencyRegulation);
+  }
+  initAllPfr();
+  document.addEventListener('astro:page-load', initAllPfr);
+  document.addEventListener('astro:before-swap', () => document.querySelectorAll('[data-pfr]').forEach((root) => pfrCleanups.get(root)?.()));
+</script>
+
+<style>
+  .pfr{--pfr-gen:#e87927;--pfr-load:#139a83;--pfr-alert:#c24155;margin:2rem 0;padding:clamp(1rem,3vw,1.5rem);border:1px solid var(--line);border-radius:var(--radius);background:var(--glass-card-bg);box-shadow:var(--shadow);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Noto Sans SC",sans-serif;overflow:hidden}
+  .pfr__header{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;margin-bottom:1rem}.pfr__header h2{margin:.12rem 0 .25rem!important;padding:0!important;border:0!important;font-size:clamp(1.2rem,3vw,1.55rem)}.pfr__header p{margin:0;color:var(--muted);font-size:.84rem}.pfr__kicker{color:var(--primary);font-size:.65rem;font-weight:800;letter-spacing:.14em}.pfr__result{display:grid;flex:none;min-width:150px;padding:.65rem .8rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-align:right}.pfr__result span{color:var(--muted);font-size:.66rem}.pfr__result strong{font-size:1.08rem;font-variant-numeric:tabular-nums}
+  .pfr__stage{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}.pfr__stage svg{display:block;width:100%;height:auto}.pfr__plot-bg{fill:var(--primary-soft);stroke:var(--line)}.pfr__axis{fill:none;stroke:var(--muted);stroke-width:1.4}.pfr__marker-axis{fill:var(--muted)}.pfr__axis-label,.pfr__tick,.pfr__delta-label{fill:var(--muted);font:12px Inter,system-ui,sans-serif}.pfr__axis-label{font-weight:700}.pfr__curve{fill:none;stroke-width:3;stroke-linecap:round}.pfr__curve--gen{stroke:var(--pfr-gen)}.pfr__curve--load{stroke:var(--pfr-load)}.pfr__curve-label{font:700 12px Inter,system-ui,sans-serif}.pfr__curve-label--gen{fill:var(--pfr-gen)}.pfr__curve-label--load{fill:var(--pfr-load)}.pfr__guide{stroke:var(--muted);stroke-width:1;stroke-dasharray:5 6;opacity:.55}.pfr__guide--f1{stroke:var(--primary);stroke-width:1.6;opacity:0;transition:opacity .35s}.pfr__tick--accent{fill:var(--primary);font-weight:700;opacity:0;transition:opacity .35s}.pfr__df-arrow{stroke:var(--muted);stroke-width:1.5;fill:none;opacity:0;transition:opacity .35s}.pfr__delta-label{font-weight:700;opacity:0;transition:opacity .35s}.pfr__dot{stroke:var(--surface-solid);stroke-width:3}.pfr__dot--initial{fill:var(--text)}.pfr__dot--gen{fill:var(--pfr-gen)}.pfr__dot--load{fill:var(--pfr-load)}.pfr__response-guide{stroke:var(--line);stroke-dasharray:3 4}.pfr__generator-response,.pfr__load-response{opacity:0;transition:opacity .4s}.pfr__power-arrow{fill:none;stroke-width:3}.pfr__power-arrow--gen{stroke:var(--pfr-gen)}.pfr__power-arrow--load{stroke:var(--pfr-load)}.pfr__marker-positive{fill:var(--pfr-gen)}.pfr__marker-load{fill:var(--pfr-load)}.pfr__power-label{font:700 13px Inter,system-ui,sans-serif}.pfr__power-label--gen{fill:var(--pfr-gen)}.pfr__power-label--load{fill:var(--pfr-load)}
+  .pfr__disturbance{opacity:0;transition:opacity .35s}.pfr__disturbance rect{fill:color-mix(in srgb,var(--pfr-alert) 12%,var(--surface-solid));stroke:color-mix(in srgb,var(--pfr-alert) 45%,var(--line))}.pfr__disturbance text{fill:var(--muted);font:10px Inter,system-ui,sans-serif;text-anchor:middle}.pfr__disturbance .pfr__disturbance-value{fill:var(--pfr-alert);font-size:16px;font-weight:800}.pfr__composition{opacity:0;transition:opacity .45s}.pfr__composition-title{fill:var(--text);font:700 12px Inter,system-ui,sans-serif;text-anchor:middle}.pfr__comp-segment{stroke-width:8;stroke-linecap:butt;stroke-dasharray:1;stroke-dashoffset:1}.pfr__comp-segment--gen{stroke:var(--pfr-gen)}.pfr__comp-segment--load{stroke:var(--pfr-load)}.pfr__comp-total{stroke:var(--text);stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1}.pfr__comp-label{font:700 11px Inter,system-ui,sans-serif}.pfr__comp-label--gen{fill:var(--pfr-gen)}.pfr__comp-label--load{fill:var(--pfr-load)}.pfr__comp-label--total{fill:var(--text);text-anchor:end}
+  .pfr[data-stage="1"] .pfr__disturbance,.pfr[data-stage="1"] .pfr__guide--f1,.pfr[data-stage="1"] .pfr__tick--accent,.pfr[data-stage="1"] .pfr__df-arrow,.pfr[data-stage="1"] .pfr__delta-label,.pfr[data-stage="2"] .pfr__guide--f1,.pfr[data-stage="2"] .pfr__tick--accent,.pfr[data-stage="2"] .pfr__df-arrow,.pfr[data-stage="2"] .pfr__delta-label,.pfr[data-stage="3"] .pfr__guide--f1,.pfr[data-stage="3"] .pfr__tick--accent,.pfr[data-stage="3"] .pfr__df-arrow,.pfr[data-stage="3"] .pfr__delta-label,.pfr[data-stage="4"] .pfr__guide--f1,.pfr[data-stage="4"] .pfr__tick--accent,.pfr[data-stage="4"] .pfr__df-arrow,.pfr[data-stage="4"] .pfr__delta-label,.pfr[data-stage="5"] .pfr__guide--f1,.pfr[data-stage="5"] .pfr__tick--accent,.pfr[data-stage="5"] .pfr__df-arrow,.pfr[data-stage="5"] .pfr__delta-label{opacity:1}.pfr[data-stage="2"] .pfr__generator-response,.pfr[data-stage="3"] .pfr__generator-response,.pfr[data-stage="4"] .pfr__generator-response,.pfr[data-stage="5"] .pfr__generator-response{opacity:1}.pfr[data-stage="3"] .pfr__load-response,.pfr[data-stage="4"] .pfr__load-response,.pfr[data-stage="5"] .pfr__load-response{opacity:1}.pfr[data-stage="4"] .pfr__composition,.pfr[data-stage="5"] .pfr__composition{opacity:1}.pfr[data-stage="4"] .pfr__comp-segment--gen{animation:pfr-draw .55s ease-out forwards}.pfr[data-stage="4"] .pfr__comp-segment--load{animation:pfr-draw .55s .5s ease-out forwards}.pfr[data-stage="4"] .pfr__comp-total{animation:pfr-draw .55s 1.05s ease-out forwards}.pfr[data-stage="5"] .pfr__comp-segment,.pfr[data-stage="5"] .pfr__comp-total{stroke-dashoffset:0}.pfr[data-stage="5"] svg{opacity:.45;transition:opacity .45s}@keyframes pfr-draw{to{stroke-dashoffset:0}}
+  .pfr__narration{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:1rem;align-items:center;padding:.8rem 1rem;border-top:1px solid var(--line)}.pfr__narration>span{color:var(--primary);font-size:.72rem;font-weight:800;font-variant-numeric:tabular-nums}.pfr__narration strong{font-size:.88rem}.pfr__narration p{margin:.05rem 0 0;color:var(--muted);font-size:.74rem;line-height:1.5}.pfr__equation{padding:.38rem .65rem;border-radius:8px;background:var(--primary-soft);color:var(--text);font:600 .8rem ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}.pfr__steps{display:grid;grid-template-columns:repeat(6,1fr);padding:0 1rem .8rem}.pfr__steps span{position:relative;display:grid;justify-items:center;color:var(--muted);font-size:.62rem}.pfr__steps span::before{content:"";position:absolute;top:5px;right:50%;width:100%;height:2px;background:var(--line)}.pfr__steps span:first-child::before{display:none}.pfr__steps i{z-index:1;width:11px;height:11px;border:2px solid var(--line);border-radius:50%;background:var(--surface-solid)}.pfr__steps b{margin-top:.2rem;font-weight:500}.pfr__steps span[data-active="true"] i{border-color:var(--primary);background:var(--primary)}.pfr__steps span[data-active="true"]::before{background:var(--primary)}.pfr__steps span[data-active="true"] b{color:var(--text)}
+  .pfr__controls{margin-top:1rem}.pfr__transport{display:flex;gap:.5rem}.pfr__transport button{border:1px solid var(--line);border-radius:9px;padding:.46rem .78rem;background:var(--surface);color:var(--text);cursor:pointer}.pfr__transport button:first-child{border-color:var(--primary);background:var(--primary);color:#fff}.pfr__transport button:hover{border-color:var(--primary)}.pfr__sliders{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:.7rem}.pfr__sliders label{padding:.7rem .8rem;border:1px solid var(--line);border-radius:11px;background:var(--surface)}.pfr__sliders label>span{display:flex;justify-content:space-between;color:var(--muted);font-size:.73rem}.pfr__sliders output{color:var(--text);font-weight:800;font-variant-numeric:tabular-nums}.pfr__sliders input{width:100%;margin-top:.5rem;accent-color:var(--primary)}.pfr__readouts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:.7rem;border:1px solid var(--line);border-radius:11px;background:var(--line);overflow:hidden}.pfr__readouts span{display:grid;padding:.55rem .7rem;background:var(--surface);color:var(--muted);font-size:.67rem}.pfr__readouts strong{color:var(--text);font-size:.84rem;font-variant-numeric:tabular-nums}
+  .pfr__derivation,.pfr__conclusion{transition:opacity .4s,transform .4s}.pfr__derivation[aria-hidden="true"],.pfr__conclusion[aria-hidden="true"]{position:absolute;opacity:0;pointer-events:none;transform:translateY(8px)}.pfr__derivation{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem 1rem;margin-top:1rem;padding:.8rem;border:1px solid var(--line);border-radius:11px;background:var(--surface);font:600 .82rem ui-monospace,SFMono-Regular,Consolas,monospace}.pfr__derivation strong{color:var(--primary)}.pfr__conclusion{margin-top:1rem;padding:1rem;border:1px solid color-mix(in srgb,var(--primary) 40%,var(--line));border-radius:12px;background:var(--primary-soft);text-align:center}.pfr__conclusion>div{font:800 clamp(1.15rem,4vw,1.65rem) ui-serif,Georgia,serif}.pfr__conclusion p{margin:.45rem 0 0;color:var(--muted);font-size:.8rem}.pfr__fraction{display:inline-grid;vertical-align:middle;margin:0 .14em;text-align:center;font-size:.78em}.pfr__fraction span:first-child{border-bottom:1px solid currentColor}
+  @media(max-width:700px){.pfr__header{align-items:flex-end}.pfr__header p{display:none}.pfr__result{min-width:130px}.pfr__narration{grid-template-columns:auto 1fr}.pfr__equation{grid-column:1/-1;text-align:center;white-space:normal}.pfr__sliders{grid-template-columns:1fr}.pfr__readouts{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:500px){.pfr{padding:.8rem}.pfr__header{display:grid;gap:.7rem}.pfr__result{width:100%;grid-template-columns:1fr auto;align-items:center;text-align:left}.pfr__stage{overflow-x:auto}.pfr__stage svg{min-width:670px}.pfr__narration,.pfr__steps{min-width:0}.pfr__steps b{display:none}.pfr__transport{display:grid;grid-template-columns:1fr 1fr 1fr}.pfr__transport button{padding:.45rem .35rem}.pfr__derivation{display:grid;text-align:center}}
+  @media(prefers-reduced-motion:reduce){.pfr *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>

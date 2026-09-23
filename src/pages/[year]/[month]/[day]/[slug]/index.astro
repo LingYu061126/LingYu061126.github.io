@@ -6,6 +6,7 @@ import { siteConfig } from '../../../../../config';
 import WalineComments from '../../../../../components/WalineComments.astro';
 import MatrixTransform from '../../../../../components/MatrixTransform.astro';
 import PwmModulation from '../../../../../components/PwmModulation.astro';
+import PowerFrequencyRegulation from '../../../../../components/PowerFrequencyRegulation.astro';
 
 function postPath(post: { data: { date: Date; slug: string } }) {
   const [year, month, day] = new Intl.DateTimeFormat('en-CA', {
@@ -57,6 +58,7 @@ const articlePath = postPath(post);
         <div class="prose" data-pagefind-body>
           {post.data.slug === '矩阵与线性变换' && <MatrixTransform />}
           {post.data.slug === 'PWM调制法' && <PwmModulation />}
+          {post.data.slug === '电力系统频率调整系数' && <PowerFrequencyRegulation />}
           <Content />
         </div>
         <section class="article-copyright glass-card" aria-label="文章版权信息">
