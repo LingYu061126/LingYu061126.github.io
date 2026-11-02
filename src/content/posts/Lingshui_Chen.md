@@ -3,8 +3,6 @@ date: 2026-02-11T22:52:49+08:00
 slug: Lingshui_Chen
 title: 写在最前
 katex: true 
-tags: 
-  - 碎碎念
 categories: 
   - 迷思
 ---

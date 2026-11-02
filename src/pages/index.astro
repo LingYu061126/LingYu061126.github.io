@@ -6,7 +6,7 @@ import { siteConfig } from '../config';
 import ProfileCard from '../components/ProfileCard.astro';
 import Pagination from '../components/Pagination.astro';
 import HeroBanner from '../components/HeroBanner.astro';
-const posts = (await getCollection('posts', ({ data }) => !data.draft && !data.tags.includes('碎碎念')))
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const pageSize = siteConfig.features.postsPerPage;
 const totalPages = Math.ceil(posts.length / pageSize);

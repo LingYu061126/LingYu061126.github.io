@@ -3,8 +3,6 @@ date: 2026-08-18T13:15:49+08:00
 slug:  苍蝇
 title:  苍蝇
 katex: true 
-tags: 
-  - 碎碎念
 categories: 
   - 迷思
 ---

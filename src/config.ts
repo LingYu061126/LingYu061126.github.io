@@ -34,7 +34,6 @@ export const siteConfig = {
   navigation: [
     { label: '首页', href: '/' },
     { label: '归档', href: '/archives/' },
-    { label: '碎碎念', href: '/shuoshuo/' },
     { label: '留言板', href: '/message/' },
     { label: '标签', href: '/tags/' },
     { label: '友链', href: '/link/' },

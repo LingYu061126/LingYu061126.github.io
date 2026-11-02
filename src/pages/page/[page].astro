@@ -8,7 +8,7 @@ import HeroBanner from '../../components/HeroBanner.astro';
 import { siteConfig } from '../../config';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && !data.tags.includes('碎碎念')))
+  const posts = (await getCollection('posts', ({ data }) => !data.draft))
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   const totalPages = Math.ceil(posts.length / siteConfig.features.postsPerPage);
   return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
